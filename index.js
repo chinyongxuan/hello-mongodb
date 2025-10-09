@@ -3,15 +3,15 @@ const { MongoClient } = require('mongodb');
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-async function run() {
+async function main() {
   try {
-    await client.connect();
+    //await client.connect();
     console.log("Connected to MongoDB!");
 
     const db = client.db("testDB");
     const collection = db.collection("users");
 
-    const result = await collection.insertOne({ name: "John Doe", age: 25 });
+    const result = await collection.insertOne({ name: "Alice", age: 25 });
     console.log("Inserted document:", result.insertedId);
 
     const docs = await collection.find().toArray();
@@ -23,4 +23,4 @@ async function run() {
   }
 }
 
-run();
+main();
