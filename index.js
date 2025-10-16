@@ -1,4 +1,6 @@
 const { MongoClient } = require('mongodb');
+const uri = "mongodb://localhost:27017";
+const client = new MongoClient(uri);
 
 const drivers = [ 
   { 
@@ -27,3 +29,22 @@ console.log(drivers);
 drivers.forEach(driver => { 
   console.log(driver.name); 
 });
+
+async function main() {
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB!");
+        const db = client.db("testDB");
+        const driversCollection = db.collection("drivers");
+        
+        // Create
+        const result = await driversCollection.insertOne(drivers[0]);
+        console.log("New driver created with result: ", result);
+    }
+    finally {
+        await client.close();
+        console.log("Connection to MongoDB closed.");
+    }
+}
+
+main();
