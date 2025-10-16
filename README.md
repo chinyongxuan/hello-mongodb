@@ -73,7 +73,7 @@ npm -v
 ## Q3. Replace the mongo functions in Task 5 to updateMany instead of updateOne, compare the diFerence based on the result in console and the mongo compass.
 
 ### Answer 3:
-![Driver updateMany Output](./images/updateMany.png)
+![Driver updateMany Output](./images/updatemany.png)
 - updateOne operations update one document that matches the filter condition.
 - updateMany operations update all document that matches the filter condition.
 
@@ -81,6 +81,6 @@ npm -v
 ### Q4. Replace the mongo functions in Task 6 to deleteMany instead of deleteOne, compare the diFerence based on the result in console and the mongo compass.
 
 ### Answer 4:
-![Driver deleteMany Output](./images/deleteMany.png)
+![Driver deleteMany Output](./images/deletemany.png)
 - updateOne operations delete one document that matches the filter condition.
 - deleteMany operations delete all document that matches the filter condition.
