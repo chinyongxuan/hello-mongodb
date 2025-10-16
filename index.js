@@ -36,15 +36,22 @@ async function main() {
         console.log("Connected to MongoDB!");
         const db = client.db("testDB");
         const driversCollection = db.collection("drivers");
-        
+
         // Create
         const result = await driversCollection.insertMany(drivers);
         console.log("New driver created with result: ", result);
-        
+
+        // Update
+        const updateResult = await db.collection('drivers').updateOne(
+            { name: "John Doe" },
+            { $inc: { rating: 0.1 } }
+        );
+        console.log("Updated driver rating with result: ", updateResult);
+
         // Query
-        const availableDrivers = await driversCollection.find({ 
-            isAvailable: true, 
-            rating: { $gte: 4.5 } 
+        const availableDrivers = await driversCollection.find({
+            isAvailable: true,
+            rating: { $gte: 4.5 }
         }).toArray();
         console.log("Available drivers with rating >= 4.5:", availableDrivers);
     }
