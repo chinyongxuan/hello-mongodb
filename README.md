@@ -63,18 +63,24 @@ npm -v
 ## Q2. Identify all the mongo operators used in the exercise, then explain the usage for each.
 
 ### Answer 2:
-- 
+- Query [rating: { $gte: 4.5 }] used to filter documents where a numeric field is greater than or equal to a given value.  
+
+- Update [ $inc: { rating: 0.1 }] used to increase or decrease a numeric field’s value by a specified amount.
+
+
 
 
 ## Q3. Replace the mongo functions in Task 5 to updateMany instead of updateOne, compare the diFerence based on the result in console and the mongo compass.
 
 ### Answer 3:
 ![Driver updateMany Output](./images/updateMany.png)
-- 
+- updateOne operations update one document that matches the filter condition.
+- updateMany operations update all document that matches the filter condition.
 
 
 ### Q4. Replace the mongo functions in Task 6 to deleteMany instead of deleteOne, compare the diFerence based on the result in console and the mongo compass.
 
 ### Answer 4:
 ![Driver deleteMany Output](./images/deleteMany.png)
-- deleteMany operations will delete all
+- updateOne operations delete one document that matches the filter condition.
+- deleteMany operations delete all document that matches the filter condition.
