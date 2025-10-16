@@ -38,8 +38,15 @@ async function main() {
         const driversCollection = db.collection("drivers");
         
         // Create
-        const result = await driversCollection.insertOne(drivers[0]);
+        const result = await driversCollection.insertMany(drivers);
         console.log("New driver created with result: ", result);
+        
+        // Query
+        const availableDrivers = await driversCollection.find({ 
+            isAvailable: true, 
+            rating: { $gte: 4.5 } 
+        }).toArray();
+        console.log("Available drivers with rating >= 4.5:", availableDrivers);
     }
     finally {
         await client.close();
