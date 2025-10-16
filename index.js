@@ -36,17 +36,21 @@ async function main() {
         console.log("Connected to MongoDB!");
         const db = client.db("testDB");
         const driversCollection = db.collection("drivers");
-
+        
         // Create
         const result = await driversCollection.insertMany(drivers);
         console.log("New driver created with result: ", result);
 
         // Update
-        const updateResult = await db.collection('drivers').updateOne(
+        const updateResult = await db.collection("drivers").updateOne(
             { name: "John Doe" },
             { $inc: { rating: 0.1 } }
         );
         console.log("Updated driver rating with result: ", updateResult);
+
+        // Delete
+        const deleteResult = await db.collection("drivers").deleteOne({ isAvailable: false });
+        console.log("Deleted driver with result: ", deleteResult);
 
         // Query
         const availableDrivers = await driversCollection.find({
