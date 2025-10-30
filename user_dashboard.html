@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        input[type="text"], input[type="email"] { padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        button:hover { background-color: #0056b3; }
+        #output { border: 1px solid #ddd; padding: 15px; min-height: 150px; white-space: pre-wrap; margin-top: 20px; background-color: #e9ecef; border-radius: 4px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Express API User Dashboard</h1>
+        <p>Uses <code>fetch()</code> to communicate with your <code>http://localhost:3000/users</code> API.</p>
+
+        <hr>
+
+        <h2>1. Create User (POST /users)</h2>
+        <input type="text" id="newUserName" placeholder="Username" value="Monica">
+        <input type="email" id="newUserEmail" placeholder="Email" value="monica@email.com">
+        <button onclick="createUser()">Create User</button>
+        <p><small>Uses the fields from your Postman collection: **username** and **email**.</small></p>
+
+        <hr>
+
+        <h2>2. Fetch All Users (GET /users)</h2>
+        <button onclick="fetchUsers()">Fetch All Users</button>
+
+        <hr>
+
+        <h2>API Response Output</h2>
+        <div id="output">Click a button to see the response...</div>
+    </div>
+
+    <script>
+        // API URL derived from your Postman collection
+        const API_URL = 'http://localhost:3000/users'; 
+        const outputDiv = document.getElementById('output');
+
+        // Helper function to display results
+        function displayOutput(data, status = 'Success') {
+            outputDiv.innerHTML = `<strong>Status: ${status}</strong>\n\n${JSON.stringify(data, null, 2)}`;
+        }
+
+        // --- CRUD Operations ---
+
+        // 1. POST Request: Create User
+        async function createUser() {
+            const username = document.getElementById('newUserName').value;
+            const email = document.getElementById('newUserEmail').value;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: username, 
+                        email: email 
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayOutput(data, `${response.status} Created`);
+                } else {
+                    displayOutput(data, `${response.status} Error`);
+                }
+
+            } catch (error) {
+                // Catches network failure or CORS errors
+                displayOutput({ error: "Network error: Make sure your Node.js server is running." }, 'Connection Failed');
+            }
+        }
+
+        // 2. GET Request: Fetch All Users
+        async function fetchUsers() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayOutput(data, '200 OK');
+                } else {
+                    displayOutput(data, `${response.status} Error`);
+                }
+
+            } catch (error) {
+                displayOutput({ error: "Network error: Make sure your Node.js server is running." }, 'Connection Failed');
+            }
+        }
+        // NOTE: You would add PATCH and DELETE functions here to complete the CRUD dashboard.
+    </script>
+</body>
+</html>

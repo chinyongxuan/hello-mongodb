@@ -12,75 +12,91 @@ node -v
 npm -v
 ```
 
-## Week 2 Tasks
+## Week 4 Tasks
 
-### Task 2.1 Read and display the driver’s name into the console
-![Driver Name Output](./images/2.1a.png)
-![Driver Name Output](./images/2.1b.png)
-
-
-### Task 2.2 Add a new driver directly in the array
-![Driver New Output](./images/2.2a.png)
-![Driver New Output](./images/2.2a.png)
+### 1. Create a Ride
+![Driver Name Output](./images/POST.png)
 
 
-### Task 3 Insert Drivers into MongoDB
-![Driver Insert Output](./images/3a.png)
-![Driver Insert Output](./images/3b.png)
-![Driver Insert Output](./images/3c.png)
+
+### 2. Fetch All Rides
+![Driver New Output](./images/GET.png)
 
 
-### Task 4 Query and Update Drivers
-![Driver Query Output](./images/4a.png)
-![Driver Query Output](./images/4a.png)
+
+### 3. Update Ride Status
+![Driver Insert Output](./images/PATCH.png)
 
 
-### Task 5 Update
-![Driver Update Output](./images/5a.png)
-![Driver Update Output](./images/5b.png)
-![Driver Update Output](./images/5c.png)
 
+### 4. Delete a Ride
+![Driver Query Output](./images/DELETE.png)
 
-### Task 6 Delete
-![Driver Delete Output](./images/6a.png)
-![Driver Delete Output](./images/6b.png)
 
 
 ## Lab Questions
 
-### Q1. Explain what is CRUD operations and how it is relates to the mongo functions in the exercise.
+## 1. POST Request:
+### 1a. "What HTTP status code is returned when a ride is created successfully?"
 
-### Answer 1:
-- C – Create → Adds one or multiple driver documents into the collection.
-[]
-
-- R – Read → Retrieves documents from the collection based on certain conditions.
-- U – Update → Modifies existing documents that match a filter condition.
-- D – Delete → Removes documents that match a filter condition.
+### Answer 1a: "201 Created"
 
 
+### 1b. "What is the structure of the response body?"
 
-## Q2. Identify all the mongo operators used in the exercise, then explain the usage for each.
-
-### Answer 2:
-- Query [rating: { $gte: 4.5 }] used to filter documents where a numeric field is greater than or equal to a given value.  
-
-- Update [ $inc: { rating: 0.1 }] used to increase or decrease a numeric field’s value by a specified amount.
+### Answer 1b: {"id": "6902cafa5ee8278b4935f327"}
 
 
+## 2. GET Request:
+### 2a. "What happens if the rides collection is empty?"
+
+### Answer 2a: ![Driver updateMany Output](./images/Q2a.png) - It return an empty array [] with a 200 OK status.
 
 
-## Q3. Replace the mongo functions in Task 5 to updateMany instead of updateOne, compare the diFerence based on the result in console and the mongo compass.
+### 2b. "What data type is returned in the response (array/object)?"
 
-### Answer 3:
-![Driver updateMany Output](./images/updatemany.png)
-- updateOne operations update one document that matches the filter condition.
-- updateMany operations update all document that matches the filter condition.
+### Answer 2b: The response shows with square bracket "[]", which means it is a **JSON array**.
 
 
-### Q4. Replace the mongo functions in Task 6 to deleteMany instead of deleteOne, compare the diFerence based on the result in console and the mongo compass.
 
-### Answer 4:
-![Driver deleteMany Output](./images/deletemany.png)
-- updateOne operations delete one document that matches the filter condition.
-- deleteMany operations delete all document that matches the filter condition.
+
+## 3. Fix PATCH and DELETE Error:
+### 3a. "Catch the error when requesting PATCH or DELETE API, then try to fix the issue reported"
+
+### Answer 3a: 
+### Error: ![Driver updateMany Output](./images/PATCH.png)
+### ![Driver updateMany Output](./images/DELETE.png)
+### Fix: Change this line "const { MongoClient } = require('mongodb');" to "const { MongoClient, ObjectId } = require('mongodb');"
+### ![Driver updateMany Output](./images/q3a1.png)
+### ![Driver updateMany Output](./images/q3a2.png)
+
+
+### 3b. "If you try to update a non-existent ride ID, what status code is returned?"
+
+### Answer 3b: ### ![Driver updateMany Output](./images/q3b.png) - It returned 404 Not Found.
+
+
+### 3c. "What is the value of updated in the response if the update succeeds?"
+
+### Answer 3c: It returned { "updated": 1 }, so the value is 1.
+
+
+### 3d. "How does the API differentiate between a successful deletion and a failed one?"
+
+### Answer 3d: For successful deletion, it returned 200 OK status with { "deleted": 1 }.  For failed deletion, it returned 404 Bad Request or 404 Not Found.
+
+
+## 4. Users Endpoints:
+### "Based on the exercise above, create the endpoints to handle the CRUD operations for users account"
+
+### Answer 4: ![Driver updateMany Output](./images/q4a.png) - POST 
+### ![Driver updateMany Output](./images/q4b.png) - GET 
+### ![Driver updateMany Output](./images/q4c.png) - PATCH 
+### ![Driver updateMany Output](./images/q4d.png) - DELETE
+
+
+## 5. FrontEnd:
+### "Upload the Postman JSON to any AI tools, and generate a simple HTML and JS Dashboard for you"
+
+### Answer 5: ### ![Driver updateMany Output](./images/q5a.png)
+### ![Driver updateMany Output](./images/q5b.png)
