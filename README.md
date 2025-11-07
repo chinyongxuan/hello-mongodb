@@ -14,20 +14,93 @@ npm -v
 
 ## Week 5 Tasks
 
-### 1. Create a Ride
-![Driver Name Output](./images/POST.png)
+### DESIGN THE USE CASE DIAGRAM
+![Driver Name Output](./images/Use_Case_Diagram.drawio.png)
 
+### DEFINE API SPECIFICATIONS
+![Driver Name Output](./images/Use_Case_Api_Specifications.png)
 
+## Postman Endpoints Implementation & MongoDB Data Model
+## Customer Endpoints
+### 1. Register Customer
+![Driver Name Output](./images/1.png)
+![Driver Name Output](./images/2.png)
 
-### 2. Fetch All Rides
-![Driver New Output](./images/GET.png)
+### 2. View Profile
+![Driver New Output](./images/3.png)
 
+### 3. Edit Profile
+![Driver Insert Output](./images/4.png)
+![Driver Name Output](./images/5.png)
 
+### 4. Request a Ride
+![Driver Query Output](./images/6.png)
+![Driver Name Output](./images/7.png)
 
-### 3. Update Ride Status
-![Driver Insert Output](./images/PATCH.png)
+### 5. Cancel Ride
+![Driver Query Output](./images/8.png)
 
+### 6. View Ride History
+![Driver Query Output](./images/9.png)
 
+### 7. Add Rating
+![Driver Query Output](./images/19.png)
+![Driver Name Output](./images/18.png)
 
-### 4. Delete a Ride
+### 8. View Ratings
 ![Driver Query Output](./images/DELETE.png)
+
+### 9. Add Payment Card
+![Driver Query Output](./images/10.png)
+![Driver Name Output](./images/11.png)
+
+### 10. Remove Payment Card
+![Driver Query Output](./images/12.png)
+
+## Driver Endpoints
+### 11. Register Driver
+![Driver Query Output](./images/13.png)
+![Driver Name Output](./images/14.png)
+
+### 12. View Driver Profile
+![Driver Query Output](./images/15.png)
+
+### 13. Edit Driver Profile
+![Driver Query Output](./images/16.png)
+![Driver Name Output](./images/17.png)
+
+### 14. Update Availability
+![Driver Query Output](./images/20.png)
+![Driver Name Output](./images/21.png)
+
+### 15. Accept Ride
+![Driver Query Output](./images/22.png)
+![Driver Name Output](./images/23.png)
+
+### 16. Reject Ride
+![Driver Query Output](./images/24.png)
+![Driver Name Output](./images/25.png)
+![Driver Name Output](./images/26.png)
+
+### 17. View Ratings
+![Driver Query Output](./images/27.png)
+
+## Admin Endpoints
+### 18. View All Customers
+![Driver Query Output](./images/28.png)
+
+### 19. View All Drivers
+![Driver Query Output](./images/29.png)
+
+### 20. Approve Driver Registration
+![Driver Query Output](./images/30.png)
+![Driver Name Output](./images/31.png)
+
+### 21. Delete Customer
+![Driver Query Output](./images/32.png)
+
+### 22. Delete Driver
+![Driver Query Output](./images/33.png)
+
+## MongoDB Data Model Structure
+![Driver Name Output](./images/34.png)
