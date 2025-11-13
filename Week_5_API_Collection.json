@@ -9,8 +9,11 @@
 	"item": [
 		{
 			"name": "http://localhost:3000/admin/drivers/690db39ea5b8c4853d006d3f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -22,14 +25,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/customers",
+					"raw": "http://localhost:3000/admin/ratings",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"customers"
+						"admin",
+						"ratings"
 					]
 				}
 			},

@@ -82,25 +82,45 @@ npm -v
 ![Driver Name Output](./images/25.png)
 ![Driver Name Output](./images/26.png)
 
-### 17. View Ratings
+### 17. Start Ride
+![Driver Query Output](./images/startride.png)
+![Driver Query Output](./images/startridestatus.png)
+
+### 18. End Ride
+![Driver Query Output](./images/endride.png)
+![Driver Query Output](./images/endridestatus.png)
+
+### 19. View Ratings
+![Driver Query Output](./images/27.png)
+
+### 20. View Ratings
+![Driver Query Output](./images/driverviewrides.png)
+
+### 21. View Ratings
 ![Driver Query Output](./images/27.png)
 
 ## Admin Endpoints
-### 18. View All Customers
+### 22. View All Customers
 ![Driver Query Output](./images/28.png)
 
-### 19. View All Drivers
+### 23. View All Drivers
 ![Driver Query Output](./images/29.png)
 
-### 20. Approve Driver Registration
+### 24. Approve Driver Registration
 ![Driver Query Output](./images/30.png)
 ![Driver Name Output](./images/31.png)
 
-### 21. Delete Customer
+### 25. Delete Customer
 ![Driver Query Output](./images/32.png)
 
-### 22. Delete Driver
+### 26. Delete Driver
 ![Driver Query Output](./images/33.png)
+
+### 27. View Ride History
+![Driver Query Output](./images/adminviewrides.png)
+
+### 28. View Ratings
+![Driver Query Output](./images/adminviewratings.png)
 
 ## MongoDB Data Model Structure
 ![Driver Name Output](./images/34.png)

@@ -317,3 +317,23 @@ app.delete('/admin/drivers/:id', async (req, res) => {
     res.status(400).json({ error: "Invalid driver ID" });
   }
 });
+
+// GET /admin/rides - View all ride history
+app.get('/admin/rides', async (req, res) => {
+  try {
+   const rides = await db.collection('rides').find().toArray();
+    res.status(200).json(rides);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch ride history" });
+  }
+});
+
+// GET /admin/ratings - View all ratings
+app.get('/admin/ratings', async (req, res) => {
+   try {
+    const ratings = await db.collection('ratings').find().toArray();
+    res.status(200).json(ratings);
+   } catch (err) {
+    res.status(500).json({ error: "Failed to fetch ratings" });
+   }
+});
