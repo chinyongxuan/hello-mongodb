@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "160d8ba1-c695-43dd-959b-450067f2d51f",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49103567",
+		"_collection_link": "https://gold-moon-3919581.postman.co/workspace/yx99's-Workspace~2239d901-72ac-4d0c-8a37-d375955c190d/collection/49103567-160d8ba1-c695-43dd-959b-450067f2d51f?action=share&source=collection_link&creator=49103567"
+	},
+	"item": [
+		{
+			"name": "Admin Registration (Create)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"IamAdmin\",\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\",\r\n  \"phone\": \"012-3346641\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Login (Getting a Token)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Admin Login (Getting a Token)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"d0-w+s4i71Y1E3c5ABprke12qOkmSw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Nov 2025 17:17:46 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTI3MjZkYjViMDFlYzUxMzhhMDYwZDQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjQxNzc0NjYsImV4cCI6MTc2NDE4MTA2Nn0.cQbHEOBQk0rHD1bVxAKFZVL2fQvFA8vV0xhzP6_5Z3E\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Access Protected Endpoint (Delete a User)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTI3MjZkYjViMDFlYzUxMzhhMDYwZDQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjQxNzM5MTYsImV4cCI6MTc2NDE3NzUxNn0.Fq-Od5AMem3d246BefftQiHMpnmM0iHrw-whhWgH9hI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/admin/customers/69272834519afaec131459f7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"admin",
+						"customers",
+						"69272834519afaec131459f7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Access Protected Endpoint (Delete a User)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTI3MjZkYjViMDFlYzUxMzhhMDYwZDQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjQxNzM2OTMsImV4cCI6MTc2NDE3NzI5M30.MSLqYbJ8-aspUzL_znLEi9hAeRic5n_3xJPmSk8M8t0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/admin/customers/69272834519afaec131459f7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"admin",
+						"customers",
+						"69272834519afaec131459f7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Access Protected Endpoint (Delete a User without a token)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/admin/customers/69272900519afaec131459f8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"admin",
+						"customers",
+						"69272900519afaec131459f8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoint Testing For Lab questions",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

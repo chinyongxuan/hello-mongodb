@@ -1,6 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// defined in Lab Part 1
+const saltRounds = 10; 
 
 const port = 3000;
 const app = express();
@@ -24,24 +30,84 @@ async function connectToMongoDB() {
 
 connectToMongoDB();
 
+// MIDDLEWARE
+// Authentication Middleware
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; 
+
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
+
+// Authorization Middleware (RBAC)
+const authorize = (roles) => (req, res, next) => {
+  if (!req.user || !roles.includes(req.user.role)) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  next();
+};
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
+// AUTHENTICATION ROUTES
 
-//  CUSTOMER ENDPOINTS 
+// POST /auth/login - Unified Login
+app.post('/auth/login', async (req, res) => {
+  const { email, password } = req.body;
 
-// POST /customers - Register new customer
+  try {
+    let user = await db.collection('customers').findOne({ email });
+    if (!user) {
+      user = await db.collection('drivers').findOne({ email });
+    }
+
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).json({ error: "Invalid credentials" });
+
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role || 'user' }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(200).json({ token }); 
+
+  } catch (err) {
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
+
+// CUSTOMER ENDPOINTS
+// POST /customers - Register
 app.post('/customers', async (req, res) => {
   try {
-    const result = await db.collection('customers').insertOne(req.body);
-    res.status(201).json({ id: result.insertedId });
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    
+    const newCustomer = {
+      ...req.body,
+      password: hashedPassword,
+      role: 'customer'
+    };
+    await db.collection('customers').insertOne(newCustomer);
+    res.status(201).json({ message: "Customer registered successfully" });
   } catch (err) {
     res.status(400).json({ error: "Invalid customer data" });
   }
 });
 
-// GET /customers/:id - View customer profile
+// GET /customers/:id
 app.get('/customers/:id', async (req, res) => {
   try {
     const customer = await db.collection('customers').findOne({ _id: new ObjectId(req.params.id) });
@@ -52,7 +118,7 @@ app.get('/customers/:id', async (req, res) => {
   }
 });
 
-// PATCH /customers/:id - Edit profile
+// PATCH /customers/:id
 app.patch('/customers/:id', async (req, res) => {
   try {
     const result = await db.collection('customers').updateOne(
@@ -66,7 +132,7 @@ app.patch('/customers/:id', async (req, res) => {
   }
 });
 
-// POST /rides - Request a new ride
+// POST /rides
 app.post('/rides', async (req, res) => {
   try {
     req.body.status = "requested";
@@ -77,7 +143,7 @@ app.post('/rides', async (req, res) => {
   }
 });
 
-// DELETE /rides/:id - Cancel a ride
+// DELETE /rides/:id
 app.delete('/rides/:id', async (req, res) => {
   try {
     const result = await db.collection('rides').deleteOne({ _id: new ObjectId(req.params.id) });
@@ -88,7 +154,7 @@ app.delete('/rides/:id', async (req, res) => {
   }
 });
 
-// GET /customers/:id/rides - View ride history
+// GET /customers/:id/rides
 app.get('/customers/:id/rides', async (req, res) => {
   try {
     const rides = await db.collection('rides').find({ customerId: req.params.id }).toArray();
@@ -98,7 +164,7 @@ app.get('/customers/:id/rides', async (req, res) => {
   }
 });
 
-// POST /ratings - Add a rating
+// POST /ratings
 app.post('/ratings', async (req, res) => {
   try {
     const result = await db.collection('ratings').insertOne(req.body);
@@ -108,7 +174,7 @@ app.post('/ratings', async (req, res) => {
   }
 });
 
-// GET /customers/:id/ratings - View ratings by customer
+// GET /customers/:id/ratings
 app.get('/customers/:id/ratings', async (req, res) => {
   try {
     const ratings = await db.collection('ratings').find({ customerId: req.params.id }).toArray();
@@ -118,7 +184,7 @@ app.get('/customers/:id/ratings', async (req, res) => {
   }
 });
 
-// POST /payments - Add payment card
+// POST /payments
 app.post('/payments', async (req, res) => {
   try {
     const result = await db.collection('payments').insertOne(req.body);
@@ -128,7 +194,7 @@ app.post('/payments', async (req, res) => {
   }
 });
 
-// DELETE /payments/:id - Remove payment card
+// DELETE /payments/:id
 app.delete('/payments/:id', async (req, res) => {
   try {
     const result = await db.collection('payments').deleteOne({ _id: new ObjectId(req.params.id) });
@@ -140,19 +206,27 @@ app.delete('/payments/:id', async (req, res) => {
 });
 
 
-//  DRIVER ENDPOINTS 
-
-// POST /drivers - Register new driver
+// DRIVER ENDPOINTS
+// POST /drivers - Register
 app.post('/drivers', async (req, res) => {
   try {
-    const result = await db.collection('drivers').insertOne(req.body);
-    res.status(201).json({ id: result.insertedId });
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    
+    const newDriver = {
+      ...req.body,
+      password: hashedPassword,
+      role: 'driver',
+      approved: false
+    };
+
+    await db.collection('drivers').insertOne(newDriver);
+    res.status(201).json({ message: "Driver registered successfully" });
   } catch (err) {
     res.status(400).json({ error: "Invalid driver data" });
   }
 });
 
-// GET /drivers/:id - View driver profile
+// GET /drivers/:id
 app.get('/drivers/:id', async (req, res) => {
   try {
     const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.params.id) });
@@ -163,7 +237,7 @@ app.get('/drivers/:id', async (req, res) => {
   }
 });
 
-// PATCH /drivers/:id - Edit driver profile
+// PATCH /drivers/:id
 app.patch('/drivers/:id', async (req, res) => {
   try {
     const result = await db.collection('drivers').updateOne(
@@ -177,7 +251,7 @@ app.patch('/drivers/:id', async (req, res) => {
   }
 });
 
-// PATCH /drivers/:id/status - Update availability
+// PATCH /drivers/:id/status
 app.patch('/drivers/:id/status', async (req, res) => {
   try {
     const result = await db.collection('drivers').updateOne(
@@ -190,7 +264,7 @@ app.patch('/drivers/:id/status', async (req, res) => {
   }
 });
 
-// PATCH /rides/:id/accept - Accept ride
+// PATCH /rides/:id/accept
 app.patch('/rides/:id/accept', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
@@ -203,7 +277,7 @@ app.patch('/rides/:id/accept', async (req, res) => {
   }
 });
 
-// PATCH /rides/:id/reject - Reject ride
+// PATCH /rides/:id/reject
 app.patch('/rides/:id/reject', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
@@ -216,7 +290,7 @@ app.patch('/rides/:id/reject', async (req, res) => {
   }
 });
 
-// PATCH /rides/:id/start - Start ride
+// PATCH /rides/:id/start
 app.patch('/rides/:id/start', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
@@ -229,7 +303,7 @@ app.patch('/rides/:id/start', async (req, res) => {
   }
 });
 
-// PATCH /rides/:id/end - End ride
+// PATCH /rides/:id/end
 app.patch('/rides/:id/end', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
@@ -242,7 +316,7 @@ app.patch('/rides/:id/end', async (req, res) => {
   }
 });
 
-// GET /drivers/:id/rides - View ride history
+// GET /drivers/:id/rides
 app.get('/drivers/:id/rides', async (req, res) => {
   try {
     const rides = await db.collection('rides').find({ driverId: req.params.id }).toArray();
@@ -252,7 +326,7 @@ app.get('/drivers/:id/rides', async (req, res) => {
   }
 });
 
-// GET /drivers/:id/ratings - View ratings for driver
+// GET /drivers/:id/ratings
 app.get('/drivers/:id/ratings', async (req, res) => {
   try {
     const ratings = await db.collection('ratings').find({ driverId: req.params.id }).toArray();
@@ -263,9 +337,28 @@ app.get('/drivers/:id/ratings', async (req, res) => {
 });
 
 
-//  ADMIN ENDPOINTS 
+// ADMIN ENDPOINTS (Protected)
+// DELETE /admin/customers/:id ( Admin)
+app.delete('/admin/customers/:id', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const result = await db.collection('customers').deleteOne({ _id: new ObjectId(req.params.id) });
+    res.status(200).json({ deleted: result.deletedCount });
+  } catch (err) {
+    res.status(400).json({ error: "Invalid customer ID" });
+  }
+});
 
-// GET /admin/customers - View all customers
+// DELETE /admin/drivers/:id
+app.delete('/admin/drivers/:id', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const result = await db.collection('drivers').deleteOne({ _id: new ObjectId(req.params.id) });
+    res.status(200).json({ deleted: result.deletedCount });
+  } catch (err) {
+    res.status(400).json({ error: "Invalid driver ID" });
+  }
+});
+
+// GET /admin/customers
 app.get('/admin/customers', async (req, res) => {
   try {
     const customers = await db.collection('customers').find().toArray();
@@ -275,7 +368,7 @@ app.get('/admin/customers', async (req, res) => {
   }
 });
 
-// GET /admin/drivers - View all drivers
+// GET /admin/drivers
 app.get('/admin/drivers', async (req, res) => {
   try {
     const drivers = await db.collection('drivers').find().toArray();
@@ -285,7 +378,7 @@ app.get('/admin/drivers', async (req, res) => {
   }
 });
 
-// PATCH /admin/drivers/:id/approve - Approve driver registration
+// PATCH /admin/drivers/:id/approve
 app.patch('/admin/drivers/:id/approve', async (req, res) => {
   try {
     const result = await db.collection('drivers').updateOne(
@@ -298,27 +391,7 @@ app.patch('/admin/drivers/:id/approve', async (req, res) => {
   }
 });
 
-// DELETE /admin/customers/:id - Delete customer
-app.delete('/admin/customers/:id', async (req, res) => {
-  try {
-    const result = await db.collection('customers').deleteOne({ _id: new ObjectId(req.params.id) });
-    res.status(200).json({ deleted: result.deletedCount });
-  } catch (err) {
-    res.status(400).json({ error: "Invalid customer ID" });
-  }
-});
-
-// DELETE /admin/drivers/:id - Delete driver
-app.delete('/admin/drivers/:id', async (req, res) => {
-  try {
-    const result = await db.collection('drivers').deleteOne({ _id: new ObjectId(req.params.id) });
-    res.status(200).json({ deleted: result.deletedCount });
-  } catch (err) {
-    res.status(400).json({ error: "Invalid driver ID" });
-  }
-});
-
-// GET /admin/rides - View all ride history
+// GET /admin/rides
 app.get('/admin/rides', async (req, res) => {
   try {
    const rides = await db.collection('rides').find().toArray();
@@ -328,7 +401,7 @@ app.get('/admin/rides', async (req, res) => {
   }
 });
 
-// GET /admin/ratings - View all ratings
+// GET /admin/ratings
 app.get('/admin/ratings', async (req, res) => {
    try {
     const ratings = await db.collection('ratings').find().toArray();
