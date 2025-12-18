@@ -1,0 +1,19 @@
+{
+	"info": {
+		"_postman_id": "14ea22fa-c1b6-41a5-9c80-bf5b65a1da9f",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49103567",
+		"_collection_link": "https://gold-moon-3919581.postman.co/workspace/yx99's-Workspace~2239d901-72ac-4d0c-8a37-d375955c190d/collection/49103567-14ea22fa-c1b6-41a5-9c80-bf5b65a1da9f?action=share&source=collection_link&creator=49103567"
+	},
+	"item": [
+		{
+			"name": "Pipeline Testing",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

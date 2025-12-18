@@ -53,6 +53,51 @@ const authorize = (roles) => (req, res, next) => {
   next();
 };
 
+
+// GET /analytics/passengers
+app.get('/analytics/passengers', async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'rides',
+          localField: '_id',
+          foreignField: 'customerId',
+          as: 'rideData'
+        }
+      },
+      {
+        $unwind: '$rideData'
+      },
+      {
+        $group: {
+          _id: '$name',
+          totalRides: { $sum: 1 },
+          totalFare: { $sum: '$rideData.fare' },
+          avgDistance: { $avg: '$rideData.distance' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: '$_id',
+          totalRides: 1,
+          totalFare: { $round: ['$totalFare', 2] },   // Added rounding
+          avgDistance: { $round: ['$avgDistance', 2] } // Added rounding 
+        }
+      }
+    ];
+
+    const results = await db.collection('customers').aggregate(pipeline).toArray();
+    res.status(200).json(results);
+
+  } catch (err) {
+    console.error("Aggregation Error:", err);
+    res.status(500).json({ error: "Failed to fetch passenger analytics" });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
