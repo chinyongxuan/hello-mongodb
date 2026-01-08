@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTaxi 2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="login-screen" class="container">
+        <h2>MyTaxi Login</h2>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Log In</button>
+        <p>New here? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+
+    <div id="register-screen" class="container hidden">
+        <h2>Create Account</h2>
+        <input type="text" id="reg-name" placeholder="Full Name">
+        <input type="email" id="reg-email" placeholder="Email">
+        <input type="password" id="reg-password" placeholder="Password">
+        <input type="text" id="reg-phone" placeholder="Phone">
+        <select id="reg-role">
+            <option value="customer">Customer</option>
+            <option value="driver">Driver</option>
+        </select>
+        <button onclick="register()">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="showLogin()">Log In</a></p>
+    </div>
+
+    <div id="dashboard-screen" class="container hidden">
+        <div class="header">
+            <h2>Welcome, <span id="user-name">User</span>!</h2>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+        
+        <div id="customer-view" class="hidden">
+            <h3>Book a Ride</h3>
+            <input type="text" id="pickup" placeholder="Pickup Location">
+            <input type="text" id="dest" placeholder="Destination">
+            <input type="number" id="fare" placeholder="Offer Fare (RM)">
+            <button onclick="requestRide()">Request Ride</button>
+            <hr>
+            <h3>My Rides</h3>
+            <ul id="ride-list"></ul>
+        </div>
+
+        <div id="driver-view" class="hidden">
+            <h3>Available Rides</h3>
+            <button onclick="loadDriverRides()">Refresh List</button>
+            <ul id="driver-ride-list"></ul>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
