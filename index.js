@@ -229,7 +229,7 @@ app.get('/customers/:id/ratings', async (req, res) => {
   }
 });
 
-// POST /payments
+// POST /payments.
 app.post('/payments', async (req, res) => {
   try {
     // 1. Validate that customerId is present
