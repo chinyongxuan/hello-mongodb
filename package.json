@@ -2,27 +2,19 @@
   "name": "databaselab1",
   "version": "1.0.0",
   "description": "- Download from [https://code.visualstudio.com](https://code.visualstudio.com)\r - Install MongoDB extension.",
-  "keywords": [],
-  "homepage": "https://github.com/chinyongxuan/hello-mongodb#readme",
-  "bugs": {
-    "url": "https://github.com/chinyongxuan/hello-mongodb/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chinyongxuan/hello-mongodb.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0"
   }
