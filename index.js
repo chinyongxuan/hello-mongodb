@@ -23,7 +23,7 @@ async function connectToMongoDB() {
   try {
     await client.connect();
     console.log("Connected to MongoDB Atlas!");
-    db = client.db("week4db"); // Ensure this matches your database name
+    db = client.db("mytaxi2026"); // Ensure this matches your database name
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
   }
