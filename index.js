@@ -232,9 +232,21 @@ app.get('/customers/:id/ratings', async (req, res) => {
 // POST /payments
 app.post('/payments', async (req, res) => {
   try {
-    const result = await db.collection('payments').insertOne(req.body);
+    // 1. Validate that customerId is present
+    if (!req.body.customerId) {
+        return res.status(400).json({ error: "customerId is required" });
+    }
+
+    const paymentData = {
+        ...req.body,
+        customerId: new ObjectId(req.body.customerId), 
+        createdAt: new Date()
+    };
+
+    const result = await db.collection('payments').insertOne(paymentData);
     res.status(201).json({ id: result.insertedId });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ error: "Invalid payment data" });
   }
 });
