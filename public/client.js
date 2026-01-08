@@ -61,6 +61,38 @@ async function login() {
     }
 }
 
+// --- ADD THIS TO client.js ---
+
+async function register() {
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const phone = document.getElementById('reg-phone').value;
+    const role = document.getElementById('reg-role').value;
+
+    // Determine the correct endpoint based on role
+    const endpoint = role === 'driver' ? '/drivers' : '/customers';
+
+    try {
+        const res = await fetch(`${API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, phone })
+        });
+
+        if (res.ok) {
+            alert("Registration successful! Please log in.");
+            showLogin();
+        } else {
+            const data = await res.json();
+            alert(data.error || "Registration failed");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("An error occurred during registration.");
+    }
+}
+
 function logout() {
     localStorage.removeItem('token');
     location.reload();
