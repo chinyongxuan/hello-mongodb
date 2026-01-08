@@ -4,8 +4,8 @@
   "description": "- Download from [https://code.visualstudio.com](https://code.visualstudio.com)\r - Install MongoDB extension.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+"start": "node index.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
