@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 // defined in Lab Part 1
 const saltRounds = 10; 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -16,15 +16,16 @@ app.use(cors());
 let db;
 
 async function connectToMongoDB() {
-  const uri = "mongodb://localhost:27017";
-  const client = new MongoClient(uri);
+  const uri = process.env.MONGODB_URI || "mongodb+srv://chin:LoO1qDHMJ32STi6Q@benr2423.mdp6zxo.mongodb.net/?appName=benr2423";
+  
+  const client = new MongoClient(uri); // You don't strictly need the ServerApiVersion options for this assignment
 
   try {
     await client.connect();
-    console.log("Connected to MongoDB!");
-    db = client.db("week4db");
+    console.log("Connected to MongoDB Atlas!");
+    db = client.db("week4db"); // Ensure this matches your database name
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error connecting to MongoDB:", err);
   }
 }
 
