@@ -18,12 +18,12 @@ let db;
 async function connectToMongoDB() {
   const uri = process.env.MONGODB_URI || "mongodb+srv://chin:LoO1qDHMJ32STi6Q@benr2423.mdp6zxo.mongodb.net/?appName=benr2423";
   
-  const client = new MongoClient(uri); // You don't strictly need the ServerApiVersion options for this assignment
+  const client = new MongoClient(uri);
 
   try {
     await client.connect();
     console.log("Connected to MongoDB Atlas!");
-    db = client.db("mytaxi2026"); // Ensure this matches your database name
+    db = client.db("mytaxi2026");
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
   }
