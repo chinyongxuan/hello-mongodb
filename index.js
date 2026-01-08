@@ -106,54 +106,55 @@ app.listen(port, () => {
 
 // POST /auth/login - Unified Login
 app.post('/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
+        
+        let user = await db.collection('customers').findOne({ email });
+        if (!user) user = await db.collection('drivers').findOne({ email });
+        
+        if (!user) return res.status(401).json({ error: "User not found" });
 
-  try {
-    let user = await db.collection('customers').findOne({ email });
-    if (!user) {
-      user = await db.collection('drivers').findOne({ email });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+
+        const token = jwt.sign(
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
+
+        res.json({ token });
+    } catch (err) {
+        res.status(500).json({ error: "Login failed" });
     }
-
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: "Invalid credentials" });
-
-
-    const token = jwt.sign(
-      { userId: user._id, role: user.role || 'user' }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
-
-    res.status(200).json({ token }); 
-
-  } catch (err) {
-    res.status(500).json({ error: "Login failed" });
-  }
 });
 
 
 // CUSTOMER ENDPOINTS
 // POST /customers - Register
 app.post('/customers', async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    
-    const newCustomer = {
-      ...req.body,
-      password: hashedPassword,
-      role: 'customer'
-    };
-    await db.collection('customers').insertOne(newCustomer);
-    res.status(201).json({ message: "Customer registered successfully" });
-  } catch (err) {
-    res.status(400).json({ error: "Invalid customer data" });
-  }
+    try {
+        const { password, ...otherData } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const newCustomer = {
+            ...otherData,
+            password: hashedPassword,
+            role: "customer"
+        };
+        
+        await db.collection('customers').insertOne(newCustomer);
+        res.status(201).json({ message: "Customer registered" });
+    } catch (err) {
+        res.status(500).json({ error: "Registration failed" });
+    }
 });
 
 // GET /customers/:id
-app.get('/customers/:id', async (req, res) => {
+app.get('/customers/:id', authenticate, async (req, res) => {
+  if (req.user.userId !== req.params.id && req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden" });
+  }
   try {
     const customer = await db.collection('customers').findOne({ _id: new ObjectId(req.params.id) });
     if (!customer) return res.status(404).json({ error: "Customer not found" });
@@ -164,7 +165,10 @@ app.get('/customers/:id', async (req, res) => {
 });
 
 // PATCH /customers/:id
-app.patch('/customers/:id', async (req, res) => {
+app.patch('/customers/:id',authenticate, async (req, res) => {
+  if (req.user.userId !== req.params.id && req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden" });
+  }
   try {
     const result = await db.collection('customers').updateOne(
       { _id: new ObjectId(req.params.id) },
@@ -178,84 +182,123 @@ app.patch('/customers/:id', async (req, res) => {
 });
 
 // POST /rides
-app.post('/rides', async (req, res) => {
+app.post('/rides', authenticate, async (req, res) => {
   try {
-    req.body.status = "requested";
-    const result = await db.collection('rides').insertOne(req.body);
+    const rideData = {
+        ...req.body,
+        customerId: new ObjectId(req.user.userId), 
+        status: "requested",
+        createdAt: new Date()
+    };
+
+    const result = await db.collection('rides').insertOne(rideData);
     res.status(201).json({ id: result.insertedId });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ error: "Invalid ride data" });
   }
 });
 
-// DELETE /rides/:id
-app.delete('/rides/:id', async (req, res) => {
+// DELETE /rides/:id (Cancel Ride)
+app.delete('/rides/:id', authenticate, async (req, res) => {
   try {
-    const result = await db.collection('rides').deleteOne({ _id: new ObjectId(req.params.id) });
-    if (!result.deletedCount) return res.status(404).json({ error: "Ride not found" });
-    res.status(200).json({ message: "Ride cancelled" });
+    const rideId = new ObjectId(req.params.id);
+    
+    const ride = await db.collection('rides').findOne({ _id: rideId });
+    
+    if (!ride) return res.status(404).json({ error: "Ride not found" });
+
+    if (ride.customerId.toString() !== req.user.userId) {
+        return res.status(403).json({ error: "You can only cancel your own rides" });
+    }
+
+    if (ride.status === 'ongoing' || ride.status === 'completed') {
+        return res.status(400).json({ error: "Cannot cancel an ongoing or completed ride" });
+    }
+
+    await db.collection('rides').deleteOne({ _id: rideId });
+    res.status(200).json({ message: "Ride cancelled successfully" });
+
   } catch (err) {
     res.status(400).json({ error: "Invalid ride ID" });
   }
 });
 
 // GET /customers/:id/rides
-app.get('/customers/:id/rides', async (req, res) => {
+app.get('/customers/:id/rides', authenticate, async (req, res) => {
   try {
-    const rides = await db.collection('rides').find({ customerId: req.params.id }).toArray();
+    const rides = await db.collection('rides').find({ 
+        customerId: new ObjectId(req.params.id) 
+    }).toArray();
+    
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch ride history" });
   }
 });
 
-// POST /ratings
-app.post('/ratings', async (req, res) => {
+// POST /ratings (Add Rating)
+app.post('/ratings', authenticate, async (req, res) => {
   try {
-    const result = await db.collection('ratings').insertOne(req.body);
+    const ratingData = {
+        ...req.body,
+        customerId: new ObjectId(req.user.userId), // recognize from Token
+        driverId: new ObjectId(req.body.driverId), // recognize from Body
+        rideId: new ObjectId(req.body.rideId),     // recognize from Body
+        createdAt: new Date()
+    };
+    const result = await db.collection('ratings').insertOne(ratingData);
     res.status(201).json({ id: result.insertedId });
   } catch (err) {
     res.status(400).json({ error: "Invalid rating data" });
   }
 });
 
-// GET /customers/:id/ratings
-app.get('/customers/:id/ratings', async (req, res) => {
-  try {
-    const ratings = await db.collection('ratings').find({ customerId: req.params.id }).toArray();
-    res.status(200).json(ratings);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch ratings" });
-  }
+// GET /ratings
+app.get('/ratings', authenticate, async (req, res) => {
+    try {
+        let query = {};
+        
+        if (req.user.role === 'admin') {
+        } 
+        else if (req.user.role === 'driver') {
+            query.driverId = new ObjectId(req.user.userId);
+        } 
+        else {
+            query.customerId = new ObjectId(req.user.userId);
+        }
+        
+        const ratings = await db.collection('ratings').find(query).toArray();
+        res.status(200).json(ratings);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch ratings" });
+    }
 });
 
-// POST /payments.
-app.post('/payments', async (req, res) => {
+// POST /payments (Add Card)
+app.post('/payments', authenticate, async (req, res) => {
   try {
-    // 1. Validate that customerId is present
-    if (!req.body.customerId) {
-        return res.status(400).json({ error: "customerId is required" });
-    }
-
     const paymentData = {
         ...req.body,
-        customerId: new ObjectId(req.body.customerId), 
+        customerId: new ObjectId(req.user.userId),
         createdAt: new Date()
     };
-
     const result = await db.collection('payments').insertOne(paymentData);
     res.status(201).json({ id: result.insertedId });
   } catch (err) {
-    console.error(err);
     res.status(400).json({ error: "Invalid payment data" });
   }
 });
 
-// DELETE /payments/:id
-app.delete('/payments/:id', async (req, res) => {
+// DELETE /payments/:id (Remove Card)
+app.delete('/payments/:id', authenticate, async (req, res) => {
   try {
-    const result = await db.collection('payments').deleteOne({ _id: new ObjectId(req.params.id) });
-    if (!result.deletedCount) return res.status(404).json({ error: "Card not found" });
+    const result = await db.collection('payments').deleteOne({ 
+        _id: new ObjectId(req.params.id),
+        customerId: new ObjectId(req.user.userId)
+    });
+    
+    if (result.deletedCount === 0) return res.status(404).json({ error: "Card not found" });
     res.status(200).json({ message: "Card removed" });
   } catch (err) {
     res.status(400).json({ error: "Invalid card ID" });
@@ -284,7 +327,10 @@ app.post('/drivers', async (req, res) => {
 });
 
 // GET /drivers/:id
-app.get('/drivers/:id', async (req, res) => {
+app.get('/drivers/:id', authenticate,async (req, res) => {
+  if (req.user.userId !== req.params.id && req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden" });
+  }
   try {
     const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.params.id) });
     if (!driver) return res.status(404).json({ error: "Driver not found" });
@@ -295,7 +341,10 @@ app.get('/drivers/:id', async (req, res) => {
 });
 
 // PATCH /drivers/:id
-app.patch('/drivers/:id', async (req, res) => {
+app.patch('/drivers/:id', authenticate, async (req, res) => {
+  if (req.user.userId !== req.params.id && req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden" });
+  }
   try {
     const result = await db.collection('drivers').updateOne(
       { _id: new ObjectId(req.params.id) },
@@ -321,12 +370,23 @@ app.patch('/drivers/:id/status', async (req, res) => {
   }
 });
 
-// PATCH /rides/:id/accept
-app.patch('/rides/:id/accept', async (req, res) => {
+// PATCH /rides/:id/accept (Driver Only)
+app.patch('/rides/:id/accept', authenticate, authorize(['driver']), async (req, res) => {
   try {
+    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.user.userId) });
+    
+    if (!driver || driver.approved !== true) {
+        return res.status(403).json({ error: "You are not approved to accept rides yet." });
+    }
+
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: { status: "accepted", driverId: req.body.driverId } }
+      { 
+          $set: { 
+              status: "accepted", 
+              driverId: new ObjectId(req.user.userId) 
+          } 
+      }
     );
     res.status(200).json({ updated: result.modifiedCount });
   } catch (err) {
@@ -335,7 +395,7 @@ app.patch('/rides/:id/accept', async (req, res) => {
 });
 
 // PATCH /rides/:id/reject
-app.patch('/rides/:id/reject', async (req, res) => {
+app.patch('/rides/:id/reject', authenticate, authorize(['driver']), async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
@@ -352,7 +412,12 @@ app.patch('/rides/:id/start', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: { status: "ongoing" } }
+      { 
+          $set: { 
+              status: "ongoing", 
+              driverId: new ObjectId(req.user.userId)
+          } 
+      }
     );
     res.status(200).json({ updated: result.modifiedCount });
   } catch (err) {
@@ -365,7 +430,12 @@ app.patch('/rides/:id/end', async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: { status: "completed" } }
+      { 
+          $set: { 
+              status: "completed", 
+              driverId: new ObjectId(req.user.userId)
+          } 
+      }
     );
     res.status(200).json({ updated: result.modifiedCount });
   } catch (err) {
@@ -374,24 +444,18 @@ app.patch('/rides/:id/end', async (req, res) => {
 });
 
 // GET /drivers/:id/rides
-app.get('/drivers/:id/rides', async (req, res) => {
+app.get('/drivers/:id/rides', authenticate, async (req, res) => {
   try {
-    const rides = await db.collection('rides').find({ driverId: req.params.id }).toArray();
+        const rides = await db.collection('rides').find({ 
+        driverId: new ObjectId(req.params.id) 
+    }).toArray();
+    
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch ride history" });
   }
 });
 
-// GET /drivers/:id/ratings
-app.get('/drivers/:id/ratings', async (req, res) => {
-  try {
-    const ratings = await db.collection('ratings').find({ driverId: req.params.id }).toArray();
-    res.status(200).json(ratings);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch ratings" });
-  }
-});
 
 
 // ADMIN ENDPOINTS (Protected)
@@ -416,7 +480,7 @@ app.delete('/admin/drivers/:id', authenticate, authorize(['admin']), async (req,
 });
 
 // GET /admin/customers
-app.get('/admin/customers', async (req, res) => {
+app.get('/admin/customers', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const customers = await db.collection('customers').find().toArray();
     res.status(200).json(customers);
@@ -426,7 +490,7 @@ app.get('/admin/customers', async (req, res) => {
 });
 
 // GET /admin/drivers
-app.get('/admin/drivers', async (req, res) => {
+app.get('/admin/drivers', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const drivers = await db.collection('drivers').find().toArray();
     res.status(200).json(drivers);
@@ -435,8 +499,8 @@ app.get('/admin/drivers', async (req, res) => {
   }
 });
 
-// PATCH /admin/drivers/:id/approve
-app.patch('/admin/drivers/:id/approve', async (req, res) => {
+// PATCH /admin/drivers/:id/approve (Admin Only)
+app.patch('/admin/drivers/:id/approve', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const result = await db.collection('drivers').updateOne(
       { _id: new ObjectId(req.params.id) },
