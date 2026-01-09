@@ -3,134 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyTaxi 2026 App</title>
+    <title>MyTaxi 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .section { display: none; border: 1px solid #ccc; padding: 20px; margin-top: 20px; border-radius: 8px; }
-        .active { display: block; }
-        button { cursor: pointer; padding: 8px 16px; margin: 5px 0; }
-        input, select { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        .error { color: red; }
-        .success { color: green; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th,td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        nav { margin-bottom: 20px; background: #eee; padding: 10px; display: flex; justify-content: space-between; }
-        h3 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px;}
+        /* --- 1. VARIABLES & RESET --- */
+        :root {
+            --primary-color: #007bff;       /* Primary Action (Blue) */
+            --primary-hover: #0056b3;
+            --danger-color: #dc3545;        /* Destructive Action (Red) */
+            --success-color: #28a745;       /* Success State (Green) */
+            --bg-color: #f4f7f6;            /* 60% Dominant Background */
+            --card-color: #ffffff;          /* 30% Secondary Background */
+            --text-main: #2c3e50;           /* Main Text */
+            --text-light: #6c757d;          /* Secondary Text */
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- 2. LAYOUT & CONTAINERS --- */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-title {
+            text-align: center;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+        }
+
+        /* --- 3. NAVIGATION --- */
+        nav {
+            background: var(--card-color);
+            padding: 15px 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+
+        #userWelcome {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* --- 4. SECTIONS (CARDS) --- */
+        .section {
+            display: none; /* Hidden by default */
+            background: var(--card-color);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #eaeaea;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { margin-top: 0; color: var(--text-main); font-size: 1.8rem; }
+        h3 { 
+            color: var(--text-light); 
+            font-size: 1.2rem; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        /* --- 5. FORMS & INPUTS --- */
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+        /* --- 6. BUTTONS (SIMPLICITY & CONTRAST) --- */
+        button {
+            cursor: pointer;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%; /* Default full width for mobile ease */
+            margin-bottom: 10px;
+        }
+
+        /* Primary Action Button */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Secondary / Danger Button Styles */
+        button.btn-danger {
+            background-color: var(--danger-color);
+        }
+        button.btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        button.btn-secondary {
+            background-color: #6c757d;
+        }
+        button.btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Smaller buttons for tables */
+        td button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            margin: 0 2px;
+        }
+
+        /* --- 7. TABLES (ALIGNMENT & CLARITY) --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden; /* For rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #fcfcfc;
+        }
+
+        /* --- 8. FEEDBACK (ALERTS) --- */
+        #messageBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        .error { background-color: var(--danger-color); opacity: 1 !important; }
+        .success { background-color: var(--success-color); opacity: 1 !important; }
+
+        /* --- UTILS --- */
+        .divider { border: 0; border-top: 1px solid #eee; margin: 30px 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        /* Modal */
+        #ratingModal {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: none !important;
+            border-radius: 12px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { margin: 10px auto; }
+            .section { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <nav id="navBar" style="display:none;">
-        <span id="userWelcome">Welcome</span>
-        <button onclick="logout()">Logout</button>
-    </nav>
+    <div class="container">
+        <h1 class="header-title">MyTaxi 2026</h1>
 
-    <h1>MyTaxi 2026</h1>
-    <div id="messageBox"></div>
+        <nav id="navBar" style="display:none;">
+            <span id="userWelcome">Welcome</span>
+            <button onclick="logout()" class="btn-danger" style="width: auto; margin:0;">Logout</button>
+        </nav>
 
-    <div id="authSection" class="section active">
-        <h2>Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginBx" placeholder="Password">
-        <button onclick="login()">Login</button>
-        
-        <hr>
-        <h3>Register New Account</h3>
-        <select id="regRole">
-            <option value="customer">Customer</option>
-            <option value="driver">Driver</option>
-        </select>
-        <input type="text" id="regName" placeholder="Full Name">
-        <input type="email" id="regEmail" placeholder="Email">
-        <input type="password" id="regPass" placeholder="Password">
-        <input type="text" id="regPhone" placeholder="Phone Number">
-        
-        <div id="driverFields" style="display:none;">
-            <input type="text" id="regPlate" placeholder="Car Plate Number">
-            <input type="text" id="regModel" placeholder="Car Model (e.g. Toyota Camry)">
-            <input type="text" id="regColor" placeholder="Car Color">
+        <div id="messageBox"></div>
+
+        <div id="authSection" class="section active">
+            <h2>Welcome Back</h2>
+            <p style="color:var(--text-light); margin-bottom: 20px;">Please login to your account.</p>
+            
+            <input type="email" id="loginEmail" placeholder="Email Address">
+            <input type="password" id="loginBx" placeholder="Password">
+            <button onclick="login()">Log In</button>
+            
+            <hr class="divider">
+            
+            <h3>Create an Account</h3>
+            <select id="regRole">
+                <option value="customer">I am a Customer</option>
+                <option value="driver">I am a Driver</option>
+            </select>
+            <input type="text" id="regName" placeholder="Full Name">
+            <input type="email" id="regEmail" placeholder="Email Address">
+            <input type="password" id="regPass" placeholder="Password">
+            <input type="text" id="regPhone" placeholder="Phone Number">
+            
+            <div id="driverFields" style="display:none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h4 style="margin-top:0;">Vehicle Details</h4>
+                <input type="text" id="regPlate" placeholder="Car Plate Number">
+                <input type="text" id="regModel" placeholder="Car Model (e.g. Toyota Camry)">
+                <input type="text" id="regColor" placeholder="Car Color">
+            </div>
+
+            <button onclick="register()" class="btn-secondary">Register Now</button>
         </div>
 
-        <button onclick="register()">Register</button>
-    </div>
+        <div id="customerDashboard" class="section">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Customer Dashboard</h2>
+            </div>
+            
+            <div style="background: #eef2f7; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="margin-top:0; border:none;">Request a Ride</h3>
+                <div class="grid-2">
+                    <input type="text" id="pickup" placeholder="From: Pickup Location" style="margin-bottom:0;">
+                    <input type="text" id="destination" placeholder="To: Destination" style="margin-bottom:0;">
+                </div>
+                <button onclick="requestRide()" style="margin-top:15px;">Book Ride Now</button>
+            </div>
 
-    <div id="customerDashboard" class="section">
-        <h2>Customer Dashboard</h2>
-        
-        <div style="background: #f9f9f9; padding: 15px; margin-bottom: 20px;">
-            <h3>Request a Ride</h3>
-            <input type="text" id="pickup" placeholder="Pickup Location">
-            <input type="text" id="destination" placeholder="Destination">
-            <button onclick="requestRide()">Book Ride</button>
+            <h3>My Ride History</h3>
+            <button onclick="loadCustomerRides()" class="btn-secondary" style="width:auto;">Refresh History</button>
+            <div id="customerRideList"></div>
+            
+            <h3>My Reviews</h3>
+            <button onclick="loadPersonalRatings('customerRatingList')" class="btn-secondary" style="width:auto;">View My Ratings</button>
+            <div id="customerRatingList"></div>
         </div>
 
-        <h3>My Ride History</h3>
-        <button onclick="loadCustomerRides()">Refresh History</button>
-        <div id="customerRideList"></div>
-        
-        <h3>My Submitted Ratings</h3>
-        <button onclick="loadPersonalRatings('customerRatingList')">View My Ratings</button>
-        <div id="customerRatingList"></div>
+        <div id="driverDashboard" class="section">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Driver Dashboard</h2>
+                <div id="driverStatusDisplay" style="font-weight:bold; color:var(--text-light);">Status: Checking...</div>
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button onclick="updateDriverStatus(true)" style="background-color: var(--success-color);">Go Online</button>
+                <button onclick="updateDriverStatus(false)" class="btn-secondary">Go Offline</button>
+            </div>
+
+            <h3>Available Requests</h3>
+            <button onclick="loadAvailableRides()" style="width:auto;">Refresh Requests</button>
+            <div id="availableRideList"></div>
+
+            <h3>My Jobs</h3>
+            <button onclick="loadDriverRides()" class="btn-secondary" style="width:auto;">Refresh Jobs</button>
+            <div id="driverRideList"></div>
+
+            <h3>Reviews from Customers</h3>
+            <button onclick="loadPersonalRatings('driverRatingList')" class="btn-secondary" style="width:auto;">View Reviews</button>
+            <div id="driverRatingList"></div>
+        </div>
+
+        <div id="adminDashboard" class="section">
+            <h2>Admin Panel</h2>
+            
+            <h3>Pending Driver Approvals</h3>
+            <button onclick="loadAdminDrivers()" style="width:auto;">Refresh Drivers</button>
+            <div id="adminDriverList"></div>
+
+            <h3>User Management (Customers)</h3>
+            <button onclick="loadAdminCustomers()" style="width:auto;">Refresh Customers</button>
+            <div id="adminCustomerList"></div>
+
+            <h3>System Rides</h3>
+            <button onclick="loadAdminRides()" style="width:auto;">Refresh Rides</button>
+            <div id="adminRideList"></div>
+            
+            <h3>System Ratings</h3>
+            <button onclick="loadAdminRatings()" style="width:auto;">Refresh Ratings</button>
+            <div id="adminRatingList"></div>
+        </div>
     </div>
 
-    <div id="driverDashboard" class="section">
-        <h2>Driver Dashboard</h2>
-        <div id="driverStatusDisplay">Status: Checking...</div>
-        
-        <h3>Update Availability</h3>
-        <button onclick="updateDriverStatus(true)">Go Online</button>
-        <button onclick="updateDriverStatus(false)">Go Offline</button>
-
-        <h3>Available Ride Requests</h3>
-        <button onclick="loadAvailableRides()">Refresh Requests</button>
-        <div id="availableRideList"></div>
-
-        <h3>My Active Jobs / History</h3>
-        <button onclick="loadDriverRides()">Refresh My Jobs</button>
-        <div id="driverRideList"></div>
-
-        <h3>My Ratings (From Customers)</h3>
-        <button onclick="loadPersonalRatings('driverRatingList')">View My Ratings</button>
-        <div id="driverRatingList"></div>
-    </div>
-
-    <div id="adminDashboard" class="section">
-        <h2>Admin Panel</h2>
-        
-        <h3>Pending Drivers</h3>
-        <button onclick="loadAdminDrivers()">Load Drivers</button>
-        <div id="adminDriverList"></div>
-
-        <h3>All Customers</h3>
-        <button onclick="loadAdminCustomers()">Load Customers</button>
-        <div id="adminCustomerList"></div>
-
-        <h3>All Rides</h3>
-        <button onclick="loadAdminRides()">Load All Rides</button>
-        <div id="adminRideList"></div>
-        
-        <h3>All Ratings</h3>
-        <button onclick="loadAdminRatings()">Load All Ratings</button>
-        <div id="adminRatingList"></div>
-    </div>
-
-    <div id="ratingModal" style="display:none; position:fixed; top:20%; left:30%; background:white; padding:20px; border:2px solid black; z-index:1000;">
-        <h3>Rate Driver</h3>
+    <div id="ratingModal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); background:white; padding:30px; width: 300px; z-index:1000;">
+        <h3 style="margin-top:0; text-align:center;">Rate Your Driver</h3>
         <input type="hidden" id="rateRideId">
         <input type="hidden" id="rateDriverId">
-        <input type="number" id="ratingValue" min="1" max="5" placeholder="Rating (1-5)">
-        <input type="text" id="ratingComment" placeholder="Comment">
+        <input type="number" id="ratingValue" min="1" max="5" placeholder="Stars (1-5)">
+        <input type="text" id="ratingComment" placeholder="Write a comment...">
         <button onclick="submitRating()">Submit Rating</button>
-        <button onclick="document.getElementById('ratingModal').style.display='none'">Cancel</button>
+        <button onclick="document.getElementById('ratingModal').style.display='none'" class="btn-secondary">Cancel</button>
     </div>
 
     <script>
-        //const API_URL = 'http://localhost:8080'; 
-        const API_URL = '';
+        const API_URL = ''; // Auto-detects Azure URL
         let currentUser = null;
         let token = localStorage.getItem('token');
 
+        // Toggle Driver Fields
         document.getElementById('regRole').addEventListener('change', (e) => {
             document.getElementById('driverFields').style.display = e.target.value === 'driver' ? 'block' : 'none';
         });
@@ -186,20 +409,15 @@
         }
 
         async function logout() {
-            // 1. If user is driver, set Offline before destroying token
             if (currentUser && currentUser.role === 'driver') {
                 try {
                     await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
                         method: 'PATCH',
-                        headers: { 
-                            'Authorization': `Bearer ${token}`, 
-                            'Content-Type': 'application/json' 
-                        },
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify({ available: false })
                     });
                 } catch (err) { console.log("Error setting offline status:", err); }
             }
-
             token = null;
             currentUser = null;
             localStorage.removeItem('token');
@@ -210,11 +428,10 @@
 
         function parseTokenAndRedirect(jwtToken) {
             if (!jwtToken) return;
-            
             const payload = JSON.parse(atob(jwtToken.split('.')[1]));
             currentUser = payload;
             
-            document.getElementById('userWelcome').innerText = `Hello, ${payload.role}`;
+            document.getElementById('userWelcome').innerText = `Hello, ${payload.role.charAt(0).toUpperCase() + payload.role.slice(1)}`;
             document.getElementById('navBar').style.display = 'flex';
 
             if (payload.role === 'customer') {
@@ -244,49 +461,36 @@
                 loadCustomerRides();
             }
         }
-
         async function loadCustomerRides() {
             if(!currentUser) return;
-            const res = await fetch(`${API_URL}/customers/${currentUser.userId}/rides`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const res = await fetch(`${API_URL}/customers/${currentUser.userId}/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
             const rides = await res.json();
-            const list = document.getElementById('customerRideList');
-            list.innerHTML = rides.length ? buildRideTable(rides, 'customer') : '<p>No rides found.</p>';
+            document.getElementById('customerRideList').innerHTML = rides.length ? buildRideTable(rides, 'customer') : '<p style="text-align:center; color:#999;">No rides found.</p>';
         }
 
         // --- DRIVER ---
         async function loadAvailableRides() {
-            const res = await fetch(`${API_URL}/rides/requested`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const rides = await res.json();
-            const list = document.getElementById('availableRideList');
-            list.innerHTML = rides.length ? buildRideTable(rides, 'driver-available') : '<p>No new requests available.</p>';
+            constQX = await fetch(`${API_URL}/rides/requested`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const rides = awaitQX.json();
+            document.getElementById('availableRideList').innerHTML = rides.length ? buildRideTable(rides, 'driver-available') : '<p style="text-align:center; color:#999;">No new requests.</p>';
         }
-
         async function loadDriverRides() {
             if(!currentUser) return;
-            const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/rides`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
             const rides = await res.json();
-            const list = document.getElementById('driverRideList');
-            list.innerHTML = rides.length ? buildRideTable(rides, 'driver-history') : '<p>No jobs history.</p>';
+            document.getElementById('driverRideList').innerHTML = rides.length ? buildRideTable(rides, 'driver-history') : '<p style="text-align:center; color:#999;">No jobs history.</p>';
         }
-
         async function checkDriverStatus() {
             if(!currentUser) return;
             try {
-                const res = await fetch(`${API_URL}/drivers/${currentUser.userId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                const res = await fetch(`${API_URL}/drivers/${currentUser.userId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const driver = await res.json();
                 const isOnline = driver.available === true;
-                document.getElementById('driverStatusDisplay').innerText = `Status: ${isOnline ? 'Online' : 'Offline'}`;
+                const statusEl = document.getElementById('driverStatusDisplay');
+                statusEl.innerText = isOnline ? 'Status: Online' : 'Status: Offline';
+                statusEl.style.color = isOnline ? 'var(--success-color)' : 'var(--text-light)';
             } catch (err) { console.error("Failed to sync status"); }
         }
-
         async function updateDriverStatus(isAvailable) {
             if(!currentUser) return;
             await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
@@ -294,21 +498,15 @@
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ available: isAvailable })
             });
-            document.getElementById('driverStatusDisplay').innerText = `Status: ${isAvailable ? 'Online' : 'Offline'}`;
+            checkDriverStatus(); // Sync UI
         }
-
         async function updateRideStatus(rideId, status) {
             let action = '';
             if (status === 'accepted') action = 'accept';
             if (status === 'rejected') action = 'reject';
             if (status === 'ongoing') action = 'start';
             if (status === 'completed') action = 'end';
-
-            const res = await fetch(`${API_URL}/rides/${rideId}/${action}`, {
-                method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
+            const res = await fetch(`${API_URL}/rides/${rideId}/${action}`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
             if(res.ok) {
                 showMessage(`Ride ${status}`);
                 loadAvailableRides();
@@ -319,70 +517,38 @@
             }
         }
 
-        // --- RATING SYSTEM ---
+        // --- RATINGS ---
         function openRatingModal(rideId, driverId) {
             document.getElementById('rateRideId').value = rideId;
             document.getElementById('rateDriverId').value = driverId;
             document.getElementById('ratingModal').style.display = 'block';
         }
-
         async function submitRating() {
             const rideId = document.getElementById('rateRideId').value;
             const driverId = document.getElementById('rateDriverId').value;
             const rating = document.getElementById('ratingValue').value;
             const comment = document.getElementById('ratingComment').value;
-
             const res = await fetch(`${API_URL}/ratings`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ rideId, driverId, rating, comment })
             });
-
             if(res.ok) {
                 showMessage('Rating submitted!');
                 document.getElementById('ratingModal').style.display = 'none';
-            } else {
-                showMessage('Failed to submit rating', true);
-            }
+            } else { showMessage('Failed to submit rating', true); }
         }
-
-        // Generic loader for Driver/Customer personal ratings
         async function loadPersonalRatings(elementId) {
-             const res = await fetch(`${API_URL}/ratings`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+             const res = await fetch(`${API_URL}/ratings`, { headers: { 'Authorization': `Bearer ${token}` } });
             const ratings = await res.json();
-
-            // Determine column header based on role
-            let nameHeader = '';
-            if (currentUser.role === 'customer') {
-                nameHeader = '<th>Rated Driver</th>';
-            } else {
-                nameHeader = '<th>From Customer</th>';
-            }
-
+            let nameHeader = currentUser.role === 'customer' ? '<th>Rated Driver</th>' : '<th>From Customer</th>';
             let html = `<table><tr>${nameHeader}<th>Rating</th><th>Comment</th></tr>`;
-            
             ratings.forEach(r => {
-                let displayDate = 'N/A';
-                
-                // Determine which name to show
-                let displayName = '';
-                if (currentUser.role === 'customer') {
-                    displayName = r.driverName || 'Unknown Driver';
-                } else {
-                    displayName = r.customerName || 'Unknown Customer';
-                }
-
-                html += `<tr>
-                    <td>${displayName}</td>
-                    <td>${r.rating} / 5</td>
-                    <td>${r.comment || '-'}</td>
-                </tr>`;
+                let displayName = currentUser.role === 'customer' ? (r.driverName || 'Unknown') : (r.customerName || 'Unknown');
+                html += `<tr><td>${displayName}</td><td><span style="color:#f1c40f;">★</span> ${r.rating} / 5</td><td>${r.comment || '-'}</td></tr>`;
             });
             html += '</table>';
-            
-            document.getElementById(elementId).innerHTML = ratings.length ? html : '<p>No ratings yet.</p>';
+            document.getElementById(elementId).innerHTML = ratings.length ? html : '<p style="text-align:center; color:#999;">No ratings yet.</p>';
         }
 
         // --- ADMIN ---
@@ -391,63 +557,47 @@
             const drivers = await res.json();
             let html = '<table><tr><th>Name</th><th>Email</th><th>Approved</th><th>Action</th></tr>';
             drivers.forEach(d => {
-                html += `<tr><td>${d.name}</td><td>${d.email}</td><td>${d.approved ? 'Yes' : 'No'}</td>
-                    <td>${!d.approved ? `<button onclick="approveDriver('${d._id}')">Approve</button>` : ''} <button onclick="deleteUser('drivers', '${d._id}')">Delete</button></td></tr>`;
+                html += `<tr><td>${d.name}</td><td>${d.email}</td>
+                    <td>${d.approved ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>'}</td>
+                    <td>${!d.approved ? `<button class="btn-secondary" onclick="approveDriver('${d._id}')">Approve</button>` : ''} 
+                    <button class="btn-danger" onclick="deleteUser('drivers', '${d._id}')">Delete</button></td></tr>`;
             });
             html += '</table>';
             document.getElementById('adminDriverList').innerHTML = html;
         }
-
         async function loadAdminCustomers() {
             const res = await fetch(`${API_URL}/admin/customers`, { headers: { 'Authorization': `Bearer ${token}` } });
             const customers = await res.json();
             let html = '<table><tr><th>Name</th><th>Email</th><th>Action</th></tr>';
             customers.forEach(c => {
-                html += `<tr><td>${c.name}</td><td>${c.email}</td><td><button onclick="deleteUser('customers', '${c._id}')">Delete</button></td></tr>`;
+                html += `<tr><td>${c.name}</td><td>${c.email}</td><td><button class="btn-danger" onclick="deleteUser('customers', '${c._id}')">Delete</button></td></tr>`;
             });
             html += '</table>';
             document.getElementById('adminCustomerList').innerHTML = html;
         }
-        
         async function loadAdminRides() {
             const res = await fetch(`${API_URL}/admin/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
             const rides = await res.json();
             document.getElementById('adminRideList').innerHTML = rides.length ? buildRideTable(rides, 'admin') : '<p>No rides found.</p>';
         }
-
-        // SPECIAL ADMIN FUNCTION TO SHOW NAMES (Uses aggregation endpoint)
         async function loadAdminRatings() {
-            const res = await fetch(`${API_URL}/admin/ratings`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const res = await fetch(`${API_URL}/admin/ratings`, { headers: { 'Authorization': `Bearer ${token}` } });
             const ratings = await res.json();
-            
             if (!ratings || ratings.length === 0) {
                 document.getElementById('adminRatingList').innerHTML = '<p>No ratings found.</p>';
                 return;
             }
-
             let html = '<table><tr><th>Customer</th><th>Driver</th><th>Rating</th><th>Comment</th></tr>';
             ratings.forEach(r => {
-                const cName = r.customerName || 'Unknown Customer';
-                const dName = r.driverName || 'Unknown Driver';
-                
-                html += `<tr>
-                    <td>${cName}</td>
-                    <td>${dName}</td>
-                    <td>${r.rating} / 5</td>
-                    <td>${r.comment || '-'}</td>
-                </tr>`;
+                html += `<tr><td>${r.customerName || 'Unknown'}</td><td>${r.driverName || 'Unknown'}</td><td>${r.rating} / 5</td><td>${r.comment || '-'}</td></tr>`;
             });
             html += '</table>';
             document.getElementById('adminRatingList').innerHTML = html;
         }
-
         async function approveDriver(id) {
             await fetch(`${API_URL}/admin/drivers/${id}/approve`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
             loadAdminDrivers();
         }
-        
         async function deleteUser(collection, id) {
             if(!confirm('Are you sure?')) return;
             await fetch(`${API_URL}/admin/${collection}/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
@@ -455,59 +605,38 @@
             else loadAdminCustomers();
         }
 
-        function showSection(id) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
-            // Show the specific section requested
-            const element = document.getElementById(id);
-            if (element) {
-                element.classList.add('active');
-            } else {
-                console.error("Section not found:", id);
-            }
-        }
-
         // --- UTILS ---
         function buildRideTable(rides, viewType) {
-            let html = '<table><tr><th>From</th><th>To</th><th>Status</th><th>Action</th></tr>';
+            let html = '<table><tr><th>Route</th><th>Status</th><th>Action</th></tr>';
             rides.forEach(r => {
                 let actionBtns = '';
-
-                if(viewType === 'driver-available' && r.status === 'requested') {
-                    actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept Job</button>`;
-                }
-                
+                if(viewType === 'driver-available' && r.status === 'requested') actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept</button>`;
                 if(viewType === 'driver-history') {
-                    if (r.status === 'accepted') {
-                        actionBtns = `<button onclick="updateRideStatus('${r._id}', 'ongoing')">Start Ride</button>`;
-                    } else if (r.status === 'ongoing') {
-                        actionBtns = `<button onclick="updateRideStatus('${r._id}', 'completed')">End Ride</button>`;
-                    }
+                    if (r.status === 'accepted') actionBtns = `<button style="background:#f39c12" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>`;
+                    else if (r.status === 'ongoing') actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
+                    else if (r.status === 'completed') actionBtns = `<span style="color:green">Done</span>`;
                 }
+                if(viewType === 'customer' && r.status === 'completed' && r.driverId) actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
                 
-                if(viewType === 'customer' && r.status === 'completed') {
-                    if(r.driverId) {
-                         actionBtns = `<button onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate Driver</button>`;
-                    }
-                }
-
+                // Simplified columns for better mobile view
                 html += `<tr>
-                    <td>${r.pickupLocation || 'N/A'}</td>
-                    <td>${r.destination || 'N/A'}</td>
-                    <td>${r.status}</td>
+                    <td><b>From:</b> ${r.pickupLocation || '?'}<br><b>To:</b> ${r.destination || '?'}</td>
+                    <td><span style="padding:4px 8px; border-radius:4px; font-size:0.8em; background:${r.status==='completed'?'#d4edda':'#fff3cd'}">${r.status.toUpperCase()}</span></td>
                     <td>${actionBtns}</td>
                 </tr>`;
             });
             html += '</table>';
             return html;
         }
-        
-        
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
         function showMessage(msg, isError = false) {
             const el = document.getElementById('messageBox');
             el.innerText = msg;
             el.className = isError ? 'error' : 'success';
-            setTimeout(() => el.innerText = '', 3000);
+            setTimeout(() => el.className = '', 3000);
         }
 
         if (token) parseTokenAndRedirect(token);
