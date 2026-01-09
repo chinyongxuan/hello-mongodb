@@ -470,10 +470,18 @@
 
         // --- DRIVER ---
         async function loadAvailableRides() {
-            constQX = await fetch(`${API_URL}/rides/requested`, { headers: { 'Authorization': `Bearer ${token}` } });
-            const rides = awaitQX.json();
-            document.getElementById('availableRideList').innerHTML = rides.length ? buildRideTable(rides, 'driver-available') : '<p style="text-align:center; color:#999;">No new requests.</p>';
+            // FIX: Changed 'constQX' back to 'const res'
+            const res = await fetch(`${API_URL}/rides/requested`, { 
+                headers: { 'Authorization': `Bearer ${token}` } 
+            });
+            
+            // FIX: Changed 'awaitQX' back to 'res'
+            const rides = await res.json();
+            
+            document.getElementById('availableRideList').innerHTML = 
+                rides.length ? buildRideTable(rides, 'driver-available') : '<p style="text-align:center; color:#999;">No new requests.</p>';
         }
+        
         async function loadDriverRides() {
             if(!currentUser) return;
             const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
