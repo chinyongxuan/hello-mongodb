@@ -429,10 +429,18 @@ app.patch('/drivers/:id', authenticate, async (req, res) => {
 });
 
 // PATCH /drivers/:id/status
-app.patch('/drivers/:id/status', async (req, res) => {
+app.patch('/drivers/:id/status', authenticate, async (req, res) => {
   try {
+    const driverId = req.user.userId;
+
+    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(driverId) });
+    
+    if (!driver || driver.approved !== true) {
+        return res.status(403).json({ error: "You must be APPROVED by an admin to go online." });
+    }
+
     const result = await db.collection('drivers').updateOne(
-      { _id: new ObjectId(req.params.id) },
+      { _id: new ObjectId(driverId) },
       { $set: { available: req.body.available } }
     );
     res.status(200).json({ updated: result.modifiedCount });
@@ -537,16 +545,22 @@ app.get('/drivers/:id/rides', authenticate, async (req, res) => {
 });
 
 
-// GET /rides/requested (Show available rides to drivers)
+// GET /rides/requested (Show available rides to approved drivers)
 app.get('/rides/requested', authenticate, authorize(['driver']), async (req, res) => {
   try {
+    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.user.userId) });
+    
+    if (!driver || driver.approved !== true) {
+
+         return res.status(403).json({ error: "Account not approved." });
+    }
+
     const rides = await db.collection('rides').find({ status: 'requested' }).toArray();
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch available rides" });
   }
 });
-
 
 // ADMIN ENDPOINTS (Protected)
 // DELETE /admin/customers/:id ( Admin)
