@@ -139,7 +139,7 @@
                 <div id="paymentList">Loading cards...</div>
                 <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
                 <div class="grid-2">
-                    <input type="text" id="cardNum" placeholder="Card Number (16 digits)">
+                    <input type="text" id="cardNum" placeholder="Card Number">
                     <input type="text" id="cardExp" placeholder="MM/YY">
                 </div>
                 <button onclick="addPayment()" class="btn-secondary" style="width: auto;">+ Add Card</button>
@@ -426,7 +426,7 @@
             });
             
             if(!res.ok) {
-                document.getElementById('paymentList').innerHTML = "No cards found / Error.";
+                document.getElementById('paymentList').innerHTML = "No cards found.";
                 return;
             }
 
