@@ -606,11 +606,32 @@ app.get('/rides/requested', authenticate, authorize(['driver']), async (req, res
     const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.user.userId) });
     
     if (!driver || driver.approved !== true) {
-
          return res.status(403).json({ error: "Account not approved." });
     }
 
-    const rides = await db.collection('rides').find({ status: 'requested' }).toArray();
+    const rides = await db.collection('rides').aggregate([
+        { $match: { status: 'requested' } },
+        {
+            $lookup: {
+                from: 'customers',
+                localField: 'customerId',
+                foreignField: '_id',
+                as: 'customerDetails'
+            }
+        },
+        {
+            $project: {
+                pickupLocation: 1,
+                destination: 1,
+                fare: 1,
+                status: 1,
+                customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
+                createdAt: 1
+            }
+        },
+        { $sort: { createdAt: -1 } }
+    ]).toArray();
+
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch available rides" });
@@ -674,7 +695,36 @@ app.patch('/admin/drivers/:id/approve', authenticate, authorize(['admin']), asyn
 // GET /admin/rides
 app.get('/admin/rides', authenticate, authorize(['admin']), async (req, res) => {
   try {
-   const rides = await db.collection('rides').find().toArray();
+    const rides = await db.collection('rides').aggregate([
+        {
+            $lookup: {
+                from: 'customers',
+                localField: 'customerId',
+                foreignField: '_id',
+                as: 'customerDetails'
+            }
+        },
+        {
+            $lookup: {
+                from: 'drivers',
+                localField: 'driverId',
+                foreignField: '_id',
+                as: 'driverDetails'
+            }
+        },
+        {
+            $project: {
+                pickupLocation: 1,
+                destination: 1,
+                status: 1,
+                customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
+                driverName: { $arrayElemAt: ["$driverDetails.name", 0] },
+                createdAt: 1
+            }
+        },
+        { $sort: { createdAt: -1 } }
+    ]).toArray();
+    
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch ride history" });

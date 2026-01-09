@@ -713,26 +713,34 @@
 
         // --- UTILS ---
         function buildRideTable(rides, viewType) {
-        // Dynamic Header based on who is viewing
+        // Dynamic Header
         let partnerHeader = viewType === 'customer' ? 'Driver' : 'Customer';
-        if(viewType === 'admin') partnerHeader = 'User Info';
+        if(viewType === 'admin') partnerHeader = 'Participants (Customer / Driver)'; // Update Header for Admin
 
         let html = `<table><tr><th>Route</th><th>${partnerHeader}</th><th>Status</th><th>Action</th></tr>`;
         
         rides.forEach(r => {
             let actionBtns = '';
-            
-            // Logic to determine Partner Name display
             let partnerDisplay = '-';
+
+            // 1. CUSTOMER VIEW: Show Driver Name
             if (viewType === 'customer') {
-                // If I am customer, show Driver Name + Car
-                partnerDisplay = r.driverName ? `<b>${r.driverName}</b><br><small>${r.carModel || ''}</small>` : '<i>Finding...</i>';
-            } else if (viewType === 'driver-history' || viewType === 'driver-available') {
-                // If I am driver, show Customer Name
+                partnerDisplay = r.driverName 
+                    ? `<b>${r.driverName}</b><br><small>${r.carModel || ''}</small>` 
+                    : '<i>Finding Driver...</i>';
+            } 
+            // 2. DRIVER VIEW: Show Customer Name (Now works because backend sends customerName)
+            else if (viewType === 'driver-history' || viewType === 'driver-available') {
                 partnerDisplay = r.customerName || '<i>Unknown</i>';
             }
+            // 3. ADMIN VIEW: Show Both
+            else if (viewType === 'admin') {
+                const cust = r.customerName || 'Unknown';
+                const driv = r.driverName || '<span style="color:#999; font-style:italic;">Pending</span>';
+                partnerDisplay = `<b>C:</b> ${cust}<br><b>D:</b> ${driv}`;
+            }
 
-            // ... (Existing button logic for Accept/Start/Cancel remains here) ...
+            // ... (Keep your existing button logic below exactly as it was) ...
             if(viewType === 'driver-available' && r.status === 'requested') actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept</button>`;
             if(viewType === 'driver-history') {
                 if (r.status === 'accepted') actionBtns = `<button style="background:#f39c12" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>`;
