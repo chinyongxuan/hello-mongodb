@@ -470,18 +470,25 @@
 
         // --- DRIVER ---
         async function loadAvailableRides() {
-            // FIX: Changed 'constQX' back to 'const res'
             const res = await fetch(`${API_URL}/rides/requested`, { 
                 headers: { 'Authorization': `Bearer ${token}` } 
             });
             
-            // FIX: Changed 'awaitQX' back to 'res'
+            // Check for errors (like 403 Not Approved)
+            if (!res.ok) {
+                const data = await res.json();
+                showMessage(data.error || 'Access denied', true);
+                // Show the error inside the list box too
+                document.getElementById('availableRideList').innerHTML = 
+                    `<p style="text-align:center; color:var(--danger-color); font-weight:bold;">${data.error}</p>`;
+                return;
+            }
+
             const rides = await res.json();
-            
             document.getElementById('availableRideList').innerHTML = 
                 rides.length ? buildRideTable(rides, 'driver-available') : '<p style="text-align:center; color:#999;">No new requests.</p>';
         }
-        
+
         async function loadDriverRides() {
             if(!currentUser) return;
             const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -501,12 +508,22 @@
         }
         async function updateDriverStatus(isAvailable) {
             if(!currentUser) return;
-            await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
+            
+            const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ available: isAvailable })
             });
-            checkDriverStatus(); // Sync UI
+
+            // Check if the update succeeded
+            if (!res.ok) {
+                const data = await res.json();
+                // Show the specific error from backend (e.g. "You must be APPROVED...")
+                showMessage(data.error || 'Failed to update status', true);
+                return; // Stop here, do not update UI status
+            }
+
+            checkDriverStatus(); // Only sync UI if successful
         }
         async function updateRideStatus(rideId, status) {
             let action = '';
