@@ -523,13 +523,39 @@ app.patch('/rides/:id/accept', authenticate, authorize(['driver']), async (req, 
 // PATCH /rides/:id/reject
 app.patch('/rides/:id/reject', authenticate, authorize(['driver']), async (req, res) => {
   try {
+    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(req.user.userId) });
+    
+    if (!driver || driver.approved !== true) {
+        return res.status(403).json({ error: "You must be approved to perform this action." });
+    }
+    if (driver.available !== true) {
+        return res.status(400).json({ error: "You must be ONLINE to manage rides." });
+    }
+
+    const ride = await db.collection('rides').findOne({ 
+        _id: new ObjectId(req.params.id),
+        driverId: new ObjectId(req.user.userId),
+        status: 'accepted'
+    });
+
+    if (!ride) {
+        return res.status(404).json({ error: "Ride not found or not assigned to you." });
+    }
+
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: { status: "rejected" } }
+      { 
+          $set: { 
+              status: "requested", 
+              driverId: null 
+          } 
+      }
     );
-    res.status(200).json({ updated: result.modifiedCount });
+
+    res.status(200).json({ message: "Ride rejected and returned to queue", updated: result.modifiedCount });
   } catch (err) {
-    res.status(400).json({ error: "Invalid ride ID" });
+    console.error(err);
+    res.status(400).json({ error: "Invalid Request" });
   }
 });
 

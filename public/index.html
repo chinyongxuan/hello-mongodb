@@ -743,9 +743,18 @@
             // ... (Keep your existing button logic below exactly as it was) ...
             if(viewType === 'driver-available' && r.status === 'requested') actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept</button>`;
             if(viewType === 'driver-history') {
-                if (r.status === 'accepted') actionBtns = `<button style="background:#f39c12" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>`;
-                else if (r.status === 'ongoing') actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
-                else if (r.status === 'completed') actionBtns = `<span style="color:green">Done</span>`;
+                if (r.status === 'accepted') {
+                    actionBtns = `
+                        <button style="background:#f39c12; width:auto; display:inline-block;" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>
+                        <button class="btn-danger" style="width:auto; display:inline-block; margin-left:5px;" onclick="updateRideStatus('${r._id}', 'rejected')">Reject</button>
+                    `;
+                }
+                else if (r.status === 'ongoing') {
+                    actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
+                }
+                else if (r.status === 'completed') {
+                    actionBtns = `<span style="color:green">Done</span>`;
+                }
             }
             if(viewType === 'customer') {
                 if(r.status === 'requested' || r.status === 'accepted') {
