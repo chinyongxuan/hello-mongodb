@@ -248,7 +248,6 @@ app.post('/rides', authenticate, async (req, res) => {
 app.delete('/rides/:id', authenticate, async (req, res) => {
   try {
     const rideId = new ObjectId(req.params.id);
-    
     const ride = await db.collection('rides').findOne({ _id: rideId });
     
     if (!ride) return res.status(404).json({ error: "Ride not found" });
@@ -257,8 +256,8 @@ app.delete('/rides/:id', authenticate, async (req, res) => {
         return res.status(403).json({ error: "You can only cancel your own rides" });
     }
 
-    if (ride.status === 'ongoing' || ride.status === 'completed') {
-        return res.status(400).json({ error: "Cannot cancel an ongoing or completed ride" });
+    if (ride.status !== 'requested' && ride.status !== 'accepted') {
+        return res.status(400).json({ error: "You can only cancel rides that are pending or accepted." });
     }
 
     await db.collection('rides').deleteOne({ _id: rideId });

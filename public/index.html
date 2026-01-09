@@ -30,202 +30,59 @@
         }
 
         /* --- 2. LAYOUT & CONTAINERS --- */
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .header-title {
-            text-align: center;
-            color: var(--text-main);
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-            letter-spacing: -1px;
-        }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .header-title { text-align: center; color: var(--text-main); font-weight: 700; margin-bottom: 10px; font-size: 2.5rem; letter-spacing: -1px; }
 
         /* --- 3. NAVIGATION --- */
-        nav {
-            background: var(--card-color);
-            padding: 15px 30px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-        }
-
-        #userWelcome {
-            font-weight: 600;
-            color: var(--text-main);
-        }
+        nav { background: var(--card-color); padding: 15px 30px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; border-radius: var(--border-radius); margin-bottom: 30px; }
+        #userWelcome { font-weight: 600; color: var(--text-main); }
 
         /* --- 4. SECTIONS (CARDS) --- */
-        .section {
-            display: none; /* Hidden by default */
-            background: var(--card-color);
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            border: 1px solid #eaeaea;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section { display: none; background: var(--card-color); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--shadow); border: 1px solid #eaeaea; animation: fadeIn 0.4s ease-in-out; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h2 { margin-top: 0; color: var(--text-main); font-size: 1.8rem; }
-        h3 { 
-            color: var(--text-light); 
-            font-size: 1.2rem; 
-            margin-top: 30px; 
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
+        h3 { color: var(--text-light); font-size: 1.2rem; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
 
-        /* --- 5. FORMS & INPUTS --- */
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 20px 0;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+        /* --- 5. PROFILE CARD STYLE --- */
+        .profile-card { background: #f8f9fa; padding: 20px; border-radius: var(--border-radius); border-left: 5px solid var(--primary-color); margin-bottom: 30px; }
+        .profile-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .profile-label { font-weight: 600; color: var(--text-light); }
+        .profile-value { font-weight: 500; color: var(--text-main); }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-        }
+        /* --- 6. FORMS & INPUTS --- */
+        input, select { width: 100%; padding: 12px; margin: 8px 0 20px 0; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
+        input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
 
-        /* --- 6. BUTTONS (SIMPLICITY & CONTRAST) --- */
-        button {
-            cursor: pointer;
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            width: 100%; /* Default full width for mobile ease */
-            margin-bottom: 10px;
-        }
-
-        /* Primary Action Button */
-        button {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Secondary / Danger Button Styles */
-        button.btn-danger {
-            background-color: var(--danger-color);
-        }
-        button.btn-danger:hover {
-            background-color: #c82333;
-        }
-        
-        button.btn-secondary {
-            background-color: #6c757d;
-        }
-        button.btn-secondary:hover {
-            background-color: #5a6268;
-        }
+        /* --- 7. BUTTONS --- */
+        button { cursor: pointer; padding: 12px 24px; border: none; border-radius: var(--border-radius); font-size: 1rem; font-weight: 500; transition: all 0.2s ease; width: 100%; margin-bottom: 10px; background-color: var(--primary-color); color: white; }
+        button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        button.btn-danger { background-color: var(--danger-color); }
+        button.btn-danger:hover { background-color: #c82333; }
+        button.btn-secondary { background-color: #6c757d; }
+        button.btn-secondary:hover { background-color: #5a6268; }
 
         /* Smaller buttons for tables */
-        td button {
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            margin: 0 2px;
-        }
+        td button { width: auto; padding: 6px 12px; font-size: 0.9rem; margin: 0 2px; }
 
-        /* --- 7. TABLES (ALIGNMENT & CLARITY) --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden; /* For rounded corners */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        }
+        /* --- 8. TABLES --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; font-weight: 600; color: var(--text-light); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        tr:hover { background-color: #fcfcfc; }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background-color: #fcfcfc;
-        }
-
-        /* --- 8. FEEDBACK (ALERTS) --- */
-        #messageBox {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 25px;
-            border-radius: 50px;
-            color: white;
-            font-weight: 600;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
+        /* --- 9. FEEDBACK --- */
+        #messageBox { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 50px; color: white; font-weight: 600; z-index: 1000; opacity: 0; transition: opacity 0.5s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); pointer-events: none; }
         .error { background-color: var(--danger-color); opacity: 1 !important; }
         .success { background-color: var(--success-color); opacity: 1 !important; }
 
-        /* --- UTILS --- */
         .divider { border: 0; border-top: 1px solid #eee; margin: 30px 0; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        /* Modal */
-        #ratingModal {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: none !important;
-            border-radius: 12px !important;
-        }
+        #ratingModal { box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none !important; border-radius: 12px !important; }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container { margin: 10px auto; }
-            .section { padding: 20px; }
-        }
+        @media (max-width: 600px) { .container { margin: 10px auto; } .section { padding: 20px; } }
     </style>
 </head>
 <body>
@@ -243,13 +100,10 @@
         <div id="authSection" class="section active">
             <h2>Welcome Back</h2>
             <p style="color:var(--text-light); margin-bottom: 20px;">Please login to your account.</p>
-            
             <input type="email" id="loginEmail" placeholder="Email Address">
             <input type="password" id="loginBx" placeholder="Password">
             <button onclick="login()">Log In</button>
-            
             <hr class="divider">
-            
             <h3>Create an Account</h3>
             <select id="regRole">
                 <option value="customer">I am a Customer</option>
@@ -259,20 +113,23 @@
             <input type="email" id="regEmail" placeholder="Email Address">
             <input type="password" id="regPass" placeholder="Password">
             <input type="text" id="regPhone" placeholder="Phone Number">
-            
             <div id="driverFields" style="display:none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                 <h4 style="margin-top:0;">Vehicle Details</h4>
                 <input type="text" id="regPlate" placeholder="Car Plate Number">
                 <input type="text" id="regModel" placeholder="Car Model (e.g. Toyota Camry)">
                 <input type="text" id="regColor" placeholder="Car Color">
             </div>
-
             <button onclick="register()" class="btn-secondary">Register Now</button>
         </div>
 
         <div id="customerDashboard" class="section">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h2>Customer Dashboard</h2>
+            </div>
+
+            <div class="profile-card">
+                <h3 style="margin-top:0; border:none; color:var(--primary-color);">My Profile</h3>
+                <div id="customerProfileDetails">Loading...</div>
             </div>
             
             <div style="background: #eef2f7; padding: 20px; border-radius: 10px; margin-top: 20px;">
@@ -298,6 +155,11 @@
                 <h2>Driver Dashboard</h2>
                 <div id="driverStatusDisplay" style="font-weight:bold; color:var(--text-light);">Status: Checking...</div>
             </div>
+
+            <div class="profile-card">
+                <h3 style="margin-top:0; border:none; color:var(--primary-color);">My Profile</h3>
+                <div id="driverProfileDetails">Loading...</div>
+            </div>
             
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <button onclick="updateDriverStatus(true)" style="background-color: var(--success-color);">Go Online</button>
@@ -319,19 +181,15 @@
 
         <div id="adminDashboard" class="section">
             <h2>Admin Panel</h2>
-            
             <h3>Pending Driver Approvals</h3>
             <button onclick="loadAdminDrivers()" style="width:auto;">Refresh Drivers</button>
             <div id="adminDriverList"></div>
-
-            <h3>User Management (Customers)</h3>
+            <h3>User Management</h3>
             <button onclick="loadAdminCustomers()" style="width:auto;">Refresh Customers</button>
             <div id="adminCustomerList"></div>
-
             <h3>System Rides</h3>
             <button onclick="loadAdminRides()" style="width:auto;">Refresh Rides</button>
             <div id="adminRideList"></div>
-            
             <h3>System Ratings</h3>
             <button onclick="loadAdminRatings()" style="width:auto;">Refresh Ratings</button>
             <div id="adminRatingList"></div>
@@ -434,6 +292,9 @@
             document.getElementById('userWelcome').innerText = `Hello, ${payload.role.charAt(0).toUpperCase() + payload.role.slice(1)}`;
             document.getElementById('navBar').style.display = 'flex';
 
+            // --- LOAD PROFILE DATA AUTOMATICALLY ---
+            loadUserProfile();
+
             if (payload.role === 'customer') {
                 showSection('customerDashboard');
                 loadCustomerRides();
@@ -447,10 +308,45 @@
             }
         }
 
+        // --- NEW: PROFILE LOADER ---
+        async function loadUserProfile() {
+            if (!currentUser || currentUser.role === 'admin') return;
+
+            const endpoint = currentUser.role === 'customer' ? `/customers/${currentUser.userId}` : `/drivers/${currentUser.userId}`;
+            const targetDiv = currentUser.role === 'customer' ? 'customerProfileDetails' : 'driverProfileDetails';
+
+            try {
+                const res = await fetch(`${API_URL}${endpoint}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await res.json();
+                
+                let html = `
+                    <div class="profile-row"><span class="profile-label">Name:</span> <span class="profile-value">${user.name}</span></div>
+                    <div class="profile-row"><span class="profile-label">Email:</span> <span class="profile-value">${user.email}</span></div>
+                    <div class="profile-row"><span class="profile-label">Phone:</span> <span class="profile-value">${user.phone}</span></div>
+                `;
+
+                if (currentUser.role === 'driver') {
+                    html += `
+                    <div class="profile-row"><span class="profile-label">Car Plate:</span> <span class="profile-value">${user.plateNumber || '-'}</span></div>
+                    <div class="profile-row"><span class="profile-label">Car Model:</span> <span class="profile-value">${user.model || '-'}</span></div>
+                    <div class="profile-row"><span class="profile-label">Color:</span> <span class="profile-value">${user.color || '-'}</span></div>
+                    `;
+                }
+
+                document.getElementById(targetDiv).innerHTML = html;
+            } catch (err) {
+                console.error("Profile load error", err);
+                document.getElementById(targetDiv).innerHTML = "Failed to load profile.";
+            }
+        }
+
         // --- CUSTOMER ---
         async function requestRide() {
             const pickup = document.getElementById('pickup').value;
             const destination = document.getElementById('destination').value;
+            constHP = 20; 
             const res = await fetch(`${API_URL}/rides`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -461,11 +357,30 @@
                 loadCustomerRides();
             }
         }
+        
         async function loadCustomerRides() {
             if(!currentUser) return;
             const res = await fetch(`${API_URL}/customers/${currentUser.userId}/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
             const rides = await res.json();
             document.getElementById('customerRideList').innerHTML = rides.length ? buildRideTable(rides, 'customer') : '<p style="text-align:center; color:#999;">No rides found.</p>';
+        }
+
+        // --- NEW: CANCEL RIDE FUNCTION ---
+        async function cancelRide(rideId) {
+            if(!confirm("Are you sure you want to cancel this ride request?")) return;
+            
+            const res = await fetch(`${API_URL}/rides/${rideId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                showMessage('Ride cancelled successfully');
+                loadCustomerRides(); // Refresh list to remove the cancelled ride
+            } else {
+                const data = await res.json();
+                showMessage(data.error || 'Failed to cancel ride', true);
+            }
         }
 
         // --- DRIVER ---
@@ -474,13 +389,10 @@
                 headers: { 'Authorization': `Bearer ${token}` } 
             });
             
-            // Check for errors (like 403 Not Approved)
             if (!res.ok) {
                 const data = await res.json();
-                showMessage(data.error || 'Access denied', true);
-                // Show the error inside the list box too
                 document.getElementById('availableRideList').innerHTML = 
-                    `<p style="text-align:center; color:var(--danger-color); font-weight:bold;">${data.error}</p>`;
+                    `<p style="text-align:center; color:var(--danger-color); font-weight:bold;">${data.error || 'Access Denied'}</p>`;
                 return;
             }
 
@@ -508,22 +420,18 @@
         }
         async function updateDriverStatus(isAvailable) {
             if(!currentUser) return;
-            
             const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ available: isAvailable })
             });
 
-            // Check if the update succeeded
             if (!res.ok) {
                 const data = await res.json();
-                // Show the specific error from backend (e.g. "You must be APPROVED...")
                 showMessage(data.error || 'Failed to update status', true);
-                return; // Stop here, do not update UI status
+                return; 
             }
-
-            checkDriverStatus(); // Only sync UI if successful
+            checkDriverStatus(); 
         }
         async function updateRideStatus(rideId, status) {
             let action = '';
@@ -641,9 +549,19 @@
                     else if (r.status === 'ongoing') actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
                     else if (r.status === 'completed') actionBtns = `<span style="color:green">Done</span>`;
                 }
-                if(viewType === 'customer' && r.status === 'completed' && r.driverId) actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
                 
-                // Simplified columns for better mobile view
+                // --- CUSTOMER LOGIC ---
+                if(viewType === 'customer') {
+                    // Show "Cancel" only if ride is requested or accepted
+                    if(r.status === 'requested' || r.status === 'accepted') {
+                        actionBtns = `<button class="btn-danger" onclick="cancelRide('${r._id}')">Cancel</button>`;
+                    }
+                    // Show "Rate" only if completed and has a driver
+                    else if (r.status === 'completed' && r.driverId) {
+                         actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
+                    }
+                }
+                
                 html += `<tr>
                     <td><b>From:</b> ${r.pickupLocation || '?'}<br><b>To:</b> ${r.destination || '?'}</td>
                     <td><span style="padding:4px 8px; border-radius:4px; font-size:0.8em; background:${r.status==='completed'?'#d4edda':'#fff3cd'}">${r.status.toUpperCase()}</span></td>
