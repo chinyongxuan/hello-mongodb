@@ -138,10 +138,18 @@
             <div style="background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
                 <div id="paymentList">Loading cards...</div>
                 <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+                
                 <div class="grid-2">
                     <input type="text" id="cardNum" placeholder="Card Number">
-                    <input type="text" id="cardExp" placeholder="MM/YY">
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="cardExp" placeholder="MM/YY" style="flex: 2;">
+                        <input type="text" id="cardCvv" placeholder="CVV" style="flex: 1;"> </div>
                 </div>
+                
+                <button onclick="addPayment()" class="btn-secondary" style="width: auto;">+ Add Card</button>
+            </div>
+                
                 <button onclick="addPayment()" class="btn-secondary" style="width: auto;">+ Add Card</button>
             </div>
 
@@ -448,28 +456,34 @@
         }
 
         async function addPayment() {
-        const num = document.getElementById('cardNum').value;
-        const exp = document.getElementById('cardExp').value;
-        const cvv = document.getElementById('cardCvv').value; // Get CVV
+            // 1. Get values from the HTML inputs
+            const num = document.getElementById('cardNum').value;
+            const exp = document.getElementById('cardExp').value;
+                
+            const cvvInput = document.getElementById('cardCvv'); 
+            const cvv = cvvInput ? cvvInput.value : ''; 
+                
+            // 2. Validate
+            if (!num || !exp || !cvv) return showMessage('Enter all card details (Num, Exp, CVV)', true);
+                
+            // 3. Send to backend
+            const res = await fetch(`${API_URL}/payments`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cardNumber: num, expiry: exp, cvv: cvv }) 
+            });
         
-        if (!num || !exp || !cvv) return showMessage('Enter all card details', true);
-
-        const res = await fetch(`${API_URL}/payments`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cardNumber: num, expiry: exp, cvv: cvv }) // Send CVV
-        });
-
-        if (res.ok) {
-            showMessage('Card added!');
-            document.getElementById('cardNum').value = '';
-            document.getElementById('cardExp').value = '';
-            document.getElementById('cardCvv').value = '';
-            loadPayments();
-        } else {
-            showMessage('Failed to add card', true);
+            if (res.ok) {
+                showMessage('Card added!');
+                // Clear inputs
+                document.getElementById('cardNum').value = '';
+                document.getElementById('cardExp').value = '';
+                if(cvvInput) cvvInput.value = '';
+                loadPayments();
+            } else {
+                showMessage('Failed to add card', true);
+            }
         }
-    }
 
         async function deletePayment(id) {
             if(!confirm("Remove this card?")) return;
