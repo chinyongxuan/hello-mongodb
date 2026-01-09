@@ -375,6 +375,29 @@ app.delete('/payments/:id', authenticate, async (req, res) => {
   }
 });
 
+// GET /customers/:id/payments (Fetch list of paymentcards)
+app.get('/customers/:id/payments', authenticate, async (req, res) => {
+  try {
+    if (req.user.userId !== req.params.id) {
+        return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const payments = await db.collection('payments').find({ 
+        customerId: new ObjectId(req.params.id) 
+    }).toArray();
+    
+    const safePayments = payments.map(p => ({
+        _id: p._id,
+        last4: p.cardNumber.slice(-4),
+        expiry: p.expiry
+    }));
+
+    res.status(200).json(safePayments);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch payments" });
+  }
+});
+
 
 // DRIVER ENDPOINTS
 // POST /drivers - Register

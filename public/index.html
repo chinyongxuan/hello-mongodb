@@ -8,36 +8,27 @@
     <style>
         /* --- 1. VARIABLES & RESET --- */
         :root {
-            --primary-color: #007bff;       /* Primary Action (Blue) */
+            --primary-color: #007bff;       
             --primary-hover: #0056b3;
-            --danger-color: #dc3545;        /* Destructive Action (Red) */
-            --success-color: #28a745;       /* Success State (Green) */
-            --bg-color: #f4f7f6;            /* 60% Dominant Background */
-            --card-color: #ffffff;          /* 30% Secondary Background */
-            --text-main: #2c3e50;           /* Main Text */
-            --text-light: #6c757d;          /* Secondary Text */
+            --danger-color: #dc3545;        
+            --success-color: #28a745;       
+            --bg-color: #f4f7f6;            
+            --card-color: #ffffff;          
+            --text-main: #2c3e50;           
+            --text-light: #6c757d;          
             --border-radius: 8px;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        /* --- 2. LAYOUT & CONTAINERS --- */
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
         .header-title { text-align: center; color: var(--text-main); font-weight: 700; margin-bottom: 10px; font-size: 2.5rem; letter-spacing: -1px; }
 
-        /* --- 3. NAVIGATION --- */
+        /* --- NAVIGATION --- */
         nav { background: var(--card-color); padding: 15px 30px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; border-radius: var(--border-radius); margin-bottom: 30px; }
         #userWelcome { font-weight: 600; color: var(--text-main); }
 
-        /* --- 4. SECTIONS (CARDS) --- */
+        /* --- SECTIONS --- */
         .section { display: none; background: var(--card-color); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--shadow); border: 1px solid #eaeaea; animation: fadeIn 0.4s ease-in-out; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -45,42 +36,43 @@
         h2 { margin-top: 0; color: var(--text-main); font-size: 1.8rem; }
         h3 { color: var(--text-light); font-size: 1.2rem; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
 
-        /* --- 5. PROFILE CARD STYLE --- */
-        .profile-card { background: #f8f9fa; padding: 20px; border-radius: var(--border-radius); border-left: 5px solid var(--primary-color); margin-bottom: 30px; }
+        /* --- PROFILE CARD --- */
+        .profile-card { background: #f8f9fa; padding: 20px; border-radius: var(--border-radius); border-left: 5px solid var(--primary-color); margin-bottom: 30px; position: relative; }
         .profile-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .profile-label { font-weight: 600; color: var(--text-light); }
         .profile-value { font-weight: 500; color: var(--text-main); }
+        .edit-btn { position: absolute; top: 20px; right: 20px; width: auto; font-size: 0.8rem; padding: 5px 10px; background: var(--text-light); }
 
-        /* --- 6. FORMS & INPUTS --- */
+        /* --- FORMS & INPUTS --- */
         input, select { width: 100%; padding: 12px; margin: 8px 0 20px 0; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
         input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
 
-        /* --- 7. BUTTONS --- */
+        /* --- BUTTONS --- */
         button { cursor: pointer; padding: 12px 24px; border: none; border-radius: var(--border-radius); font-size: 1rem; font-weight: 500; transition: all 0.2s ease; width: 100%; margin-bottom: 10px; background-color: var(--primary-color); color: white; }
         button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
         button.btn-danger { background-color: var(--danger-color); }
         button.btn-danger:hover { background-color: #c82333; }
         button.btn-secondary { background-color: #6c757d; }
         button.btn-secondary:hover { background-color: #5a6268; }
-
-        /* Smaller buttons for tables */
         td button { width: auto; padding: 6px 12px; font-size: 0.9rem; margin: 0 2px; }
 
-        /* --- 8. TABLES --- */
+        /* --- TABLES --- */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
         th { background-color: #f8f9fa; font-weight: 600; color: var(--text-light); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
         tr:hover { background-color: #fcfcfc; }
 
-        /* --- 9. FEEDBACK --- */
-        #messageBox { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 50px; color: white; font-weight: 600; z-index: 1000; opacity: 0; transition: opacity 0.5s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); pointer-events: none; }
+        /* --- FEEDBACK & UTILS --- */
+        #messageBox { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 50px; color: white; font-weight: 600; z-index: 2000; opacity: 0; transition: opacity 0.5s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); pointer-events: none; }
         .error { background-color: var(--danger-color); opacity: 1 !important; }
         .success { background-color: var(--success-color); opacity: 1 !important; }
 
         .divider { border: 0; border-top: 1px solid #eee; margin: 30px 0; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        #ratingModal { box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none !important; border-radius: 12px !important; }
+        /* --- MODALS --- */
+        .modal { display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); background:white; padding:30px; width: 90%; max-width: 400px; z-index:1000; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border-radius: 12px; }
+        .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; }
 
         @media (max-width: 600px) { .container { margin: 10px auto; } .section { padding: 20px; } }
     </style>
@@ -128,6 +120,7 @@
             </div>
 
             <div class="profile-card">
+                <button class="edit-btn" onclick="openEditProfileModal()">Edit Profile</button>
                 <h3 style="margin-top:0; border:none; color:var(--primary-color);">My Profile</h3>
                 <div id="customerProfileDetails">Loading...</div>
             </div>
@@ -139,6 +132,17 @@
                     <input type="text" id="destination" placeholder="To: Destination" style="margin-bottom:0;">
                 </div>
                 <button onclick="requestRide()" style="margin-top:15px;">Book Ride Now</button>
+            </div>
+
+            <h3>Payment Wallet</h3>
+            <div style="background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
+                <div id="paymentList">Loading cards...</div>
+                <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+                <div class="grid-2">
+                    <input type="text" id="cardNum" placeholder="Card Number (16 digits)">
+                    <input type="text" id="cardExp" placeholder="MM/YY">
+                </div>
+                <button onclick="addPayment()" class="btn-secondary" style="width: auto;">+ Add Card</button>
             </div>
 
             <h3>My Ride History</h3>
@@ -157,6 +161,7 @@
             </div>
 
             <div class="profile-card">
+                <button class="edit-btn" onclick="openEditProfileModal()">Edit Profile</button>
                 <h3 style="margin-top:0; border:none; color:var(--primary-color);">My Profile</h3>
                 <div id="driverProfileDetails">Loading...</div>
             </div>
@@ -196,22 +201,40 @@
         </div>
     </div>
 
-    <div id="ratingModal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); background:white; padding:30px; width: 300px; z-index:1000;">
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <div id="ratingModal" class="modal">
         <h3 style="margin-top:0; text-align:center;">Rate Your Driver</h3>
         <input type="hidden" id="rateRideId">
         <input type="hidden" id="rateDriverId">
         <input type="number" id="ratingValue" min="1" max="5" placeholder="Stars (1-5)">
         <input type="text" id="ratingComment" placeholder="Write a comment...">
         <button onclick="submitRating()">Submit Rating</button>
-        <button onclick="document.getElementById('ratingModal').style.display='none'" class="btn-secondary">Cancel</button>
+        <button onclick="closeModals()" class="btn-secondary">Cancel</button>
+    </div>
+
+    <div id="editProfileModal" class="modal">
+        <h3 style="margin-top:0; text-align:center;">Edit Profile</h3>
+        <input type="text" id="editName" placeholder="Full Name">
+        <input type="text" id="editEmail" placeholder="Email">
+        <input type="text" id="editPhone" placeholder="Phone">
+        
+        <div id="editDriverFields" style="display:none;">
+            <input type="text" id="editPlate" placeholder="Car Plate">
+            <input type="text" id="editModel" placeholder="Car Model">
+            <input type="text" id="editColor" placeholder="Color">
+        </div>
+        
+        <button onclick="updateProfile()">Save Changes</button>
+        <button onclick="closeModals()" class="btn-secondary">Cancel</button>
     </div>
 
     <script>
         const API_URL = ''; // Auto-detects Azure URL
         let currentUser = null;
         let token = localStorage.getItem('token');
+        let currentProfileData = {}; // Store raw profile data for editing
 
-        // Toggle Driver Fields
         document.getElementById('regRole').addEventListener('change', (e) => {
             document.getElementById('driverFields').style.display = e.target.value === 'driver' ? 'block' : 'none';
         });
@@ -292,12 +315,12 @@
             document.getElementById('userWelcome').innerText = `Hello, ${payload.role.charAt(0).toUpperCase() + payload.role.slice(1)}`;
             document.getElementById('navBar').style.display = 'flex';
 
-            // --- LOAD PROFILE DATA AUTOMATICALLY ---
             loadUserProfile();
 
             if (payload.role === 'customer') {
                 showSection('customerDashboard');
                 loadCustomerRides();
+                loadPayments(); // NEW: Load payments
             } else if (payload.role === 'driver') {
                 showSection('driverDashboard');
                 loadDriverRides(); 
@@ -308,7 +331,7 @@
             }
         }
 
-        // --- NEW: PROFILE LOADER ---
+        // --- PROFILE & EDITING ---
         async function loadUserProfile() {
             if (!currentUser || currentUser.role === 'admin') return;
 
@@ -320,6 +343,7 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const user = await res.json();
+                currentProfileData = user; // Store for editing
                 
                 let html = `
                     <div class="profile-row"><span class="profile-label">Name:</span> <span class="profile-value">${user.name}</span></div>
@@ -342,11 +366,128 @@
             }
         }
 
-        // --- CUSTOMER ---
+        function openEditProfileModal() {
+            // Pre-fill data
+            document.getElementById('editName').value = currentProfileData.name || '';
+            document.getElementById('editEmail').value = currentProfileData.email || '';
+            document.getElementById('editPhone').value = currentProfileData.phone || '';
+
+            const driverDiv = document.getElementById('editDriverFields');
+            if (currentUser.role === 'driver') {
+                driverDiv.style.display = 'block';
+                document.getElementById('editPlate').value = currentProfileData.plateNumber || '';
+                document.getElementById('editModel').value = currentProfileData.model || '';
+                document.getElementById('editColor').value = currentProfileData.color || '';
+            } else {
+                driverDiv.style.display = 'none';
+            }
+
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.getElementById('editProfileModal').style.display = 'block';
+        }
+
+        async function updateProfile() {
+            const endpoint = currentUser.role === 'customer' ? `/customers/${currentUser.userId}` : `/drivers/${currentUser.userId}`;
+            
+            const body = {
+                name: document.getElementById('editName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value
+            };
+
+            if (currentUser.role === 'driver') {
+                body.plateNumber = document.getElementById('editPlate').value;
+                body.model = document.getElementById('editModel').value;
+                body.color = document.getElementById('editColor').value;
+            }
+
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if (res.ok) {
+                showMessage('Profile updated!');
+                closeModals();
+                loadUserProfile(); // Refresh display
+            } else {
+                showMessage('Update failed', true);
+            }
+        }
+
+        // --- PAYMENT METHODS ---
+        async function loadPayments() {
+            if(!currentUser || currentUser.role !== 'customer') return;
+
+            // This GET endpoint needs to be added to backend
+            const res = await fetch(`${API_URL}/customers/${currentUser.userId}/payments`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if(!res.ok) {
+                document.getElementById('paymentList').innerHTML = "No cards found / Error.";
+                return;
+            }
+
+            const cards = await res.json();
+            if (cards.length === 0) {
+                document.getElementById('paymentList').innerHTML = "<i>No cards linked.</i>";
+                return;
+            }
+
+            let html = `<ul style="list-style:none; padding:0;">`;
+            cards.forEach(c => {
+                html += `<li style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:5px 0;">
+                    <span>💳 **** ${c.last4} (Exp: ${c.expiry})</span>
+                    <button class="btn-danger" style="width:auto; font-size:0.8rem; padding:4px 8px;" onclick="deletePayment('${c._id}')">Remove</button>
+                </li>`;
+            });
+            html += `</ul>`;
+            document.getElementById('paymentList').innerHTML = html;
+        }
+
+        async function addPayment() {
+            const num = document.getElementById('cardNum').value;
+            const exp = document.getElementById('cardExp').value;
+            
+            if (!num || !exp) return showMessage('Enter card details', true);
+
+            const res = await fetch(`${API_URL}/payments`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cardNumber: num, expiry: exp, cvv: '123' })
+            });
+
+            if (res.ok) {
+                showMessage('Card added!');
+                document.getElementById('cardNum').value = '';
+                document.getElementById('cardExp').value = '';
+                loadPayments();
+            } else {
+                showMessage('Failed to add card', true);
+            }
+        }
+
+        async function deletePayment(id) {
+            if(!confirm("Remove this card?")) return;
+            const res = await fetch(`${API_URL}/payments/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(res.ok) {
+                showMessage('Card removed');
+                loadPayments();
+            } else {
+                showMessage('Failed to remove', true);
+            }
+        }
+
+
+        // --- CUSTOMER RIDES ---
         async function requestRide() {
             const pickup = document.getElementById('pickup').value;
             const destination = document.getElementById('destination').value;
-            constHP = 20; 
             const res = await fetch(`${API_URL}/rides`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -365,7 +506,6 @@
             document.getElementById('customerRideList').innerHTML = rides.length ? buildRideTable(rides, 'customer') : '<p style="text-align:center; color:#999;">No rides found.</p>';
         }
 
-        // --- NEW: CANCEL RIDE FUNCTION ---
         async function cancelRide(rideId) {
             if(!confirm("Are you sure you want to cancel this ride request?")) return;
             
@@ -376,7 +516,7 @@
 
             if (res.ok) {
                 showMessage('Ride cancelled successfully');
-                loadCustomerRides(); // Refresh list to remove the cancelled ride
+                loadCustomerRides();
             } else {
                 const data = await res.json();
                 showMessage(data.error || 'Failed to cancel ride', true);
@@ -454,8 +594,15 @@
         function openRatingModal(rideId, driverId) {
             document.getElementById('rateRideId').value = rideId;
             document.getElementById('rateDriverId').value = driverId;
+            document.getElementById('modalOverlay').style.display = 'block';
             document.getElementById('ratingModal').style.display = 'block';
         }
+        function closeModals() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.getElementById('ratingModal').style.display = 'none';
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
         async function submitRating() {
             const rideId = document.getElementById('rateRideId').value;
             const driverId = document.getElementById('rateDriverId').value;
@@ -468,7 +615,7 @@
             });
             if(res.ok) {
                 showMessage('Rating submitted!');
-                document.getElementById('ratingModal').style.display = 'none';
+                closeModals();
             } else { showMessage('Failed to submit rating', true); }
         }
         async function loadPersonalRatings(elementId) {
@@ -552,11 +699,9 @@
                 
                 // --- CUSTOMER LOGIC ---
                 if(viewType === 'customer') {
-                    // Show "Cancel" only if ride is requested or accepted
                     if(r.status === 'requested' || r.status === 'accepted') {
                         actionBtns = `<button class="btn-danger" onclick="cancelRide('${r._id}')">Cancel</button>`;
                     }
-                    // Show "Rate" only if completed and has a driver
                     else if (r.status === 'completed' && r.driverId) {
                          actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
                     }
