@@ -469,21 +469,31 @@ app.patch('/drivers/:id', authenticate, async (req, res) => {
 // PATCH /drivers/:id/status
 app.patch('/drivers/:id/status', authenticate, async (req, res) => {
   try {
-    const driverId = req.user.userId;
+    const targetId = req.params.id;
 
-    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(driverId) });
+    if (!ObjectId.isValid(targetId)) {
+        return res.status(400).json({ error: "Invalid driver ID format provided in URL" });
+    }
+
+    if (req.user.userId !== targetId && req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden: You can only update your own status" });
+    }
+
+    const driver = await db.collection('drivers').findOne({ _id: new ObjectId(targetId) });
     
     if (!driver || driver.approved !== true) {
         return res.status(403).json({ error: "You must be APPROVED by an admin to go online." });
     }
 
     const result = await db.collection('drivers').updateOne(
-      { _id: new ObjectId(driverId) },
+      { _id: new ObjectId(targetId) },
       { $set: { available: req.body.available } }
     );
     res.status(200).json({ updated: result.modifiedCount });
+
   } catch (err) {
-    res.status(400).json({ error: "Invalid driver ID" });
+    console.error("Status Update Error:", err);
+    res.status(400).json({ error: "Request failed" });
   }
 });
 
