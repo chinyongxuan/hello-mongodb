@@ -1,0 +1,1173 @@
+{
+	"info": {
+		"_postman_id": "4932db63-f35e-4528-89ba-d69c26fac91d",
+		"name": "Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49103567"
+	},
+	"item": [
+		{
+			"name": "Input Customer Info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Alice Customer\",\r\n  \"email\": \"alice@test.com\",\r\n  \"password\": \"password123\",\r\n  \"phone\": \"012-3456789\",\r\n  \"address\": \"Melaka, Malaysia\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Input Driver Info",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Bob Driver\",\r\n  \"email\": \"bob@driver.com\",\r\n  \"password\": \"abc123\",\r\n  \"phone\": \"019-8765432\",\r\n  \"vehicle\": {\r\n    \"model\": \"Toyota Camry\",\r\n    \"plateNumber\": \"JQV 1234\",\r\n    \"color\": \"Silver\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/drivers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"drivers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Input Ride Info",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customerId\": \"695fbdcd02405a2f8b4fd4d5\",\r\n  \"pickup\": \"Ayer Keroh\",\r\n  \"destination\": \"UTeM\",\r\n  \"fare\": 15.00,\r\n  \"distance\": 10.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/rides",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Customer Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"ali\",\r\n  \"email\": \"ali@test.com\",\r\n  \"phone\": \"016864479\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/customers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer Login for JWT Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"ali@test.com\",\r\n  \"userId\": \"6960d7195cf4bca091cc3266\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Customer Profile (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers",
+						"6960d7195cf4bca091cc3266"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Customer Profile Details (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"phone\": \"010101101\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers",
+						"6960d7195cf4bca091cc3266"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Payment card (customer only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"cardNumber\": \"1234\", \"expiry\": \"12/25\",\"cvv\":\"234\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/payments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer View Payment Cards (Protected)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266/payments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers",
+						"6960d7195cf4bca091cc3266",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Payment Card (customer only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/payments/6960f7cdf4602a88f46406be",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"payments",
+						"6960f7cdf4602a88f46406be"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer Request a Ride",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pickup\": \"Ayer Keroh\",\r\n  \"destination\": \"Durian Tunggal\",\r\n  \"fare\": 12.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer Cancel Ride (Validation)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/rides/6960f875f4602a88f46406c0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"6960f875f4602a88f46406c0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer add Ratings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"driverId\": \"6960b6f4e69ba3ee7ff8d220\", \"rideId\": \"6960f8fdf4602a88f46406c2\", \"score\": 5, \"comment\": \"Well Done\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/ratings",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer View Ratings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/ratings",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer View Ride History (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZDcxOTVjZjRiY2EwOTFjYzMyNjYiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njc5NjIzNzEsImV4cCI6MTc2Nzk2NTk3MX0.RTq9racQzA5KLk8oYxkTDT9w_5U-HHeDxuB08XZMcpQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266/rides",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers",
+						"6960d7195cf4bca091cc3266",
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Driver Account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Lewis\",\r\n  \"email\": \"lewis@driver.com\",\r\n  \"password\": \"abc123\",\r\n  \"phone\": \"012-1234567\",\r\n  \"vehicle\": {\r\n    \"model\": \"Ferrari F40\",\r\n    \"plateNumber\": \"A 1\",\r\n    \"color\": \"Red\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/drivers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"drivers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver Login for JWT Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"ben@test.com\",\r\n  \"userId\": \"6960b6f4e69ba3ee7ff8d220\",\r\n  \"password\": \"abc123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Register (as customer first then edit role in mongodb)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Super Admin\",\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"admin123\",\r\n  \"phone\": \"000000000\",\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/customers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Driver Profile (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmE4MGY0NjAyYTg4ZjQ2NDA2YzUiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTYzNTQxLCJleHAiOjE3Njc5NjcxNDF9.wFFb04TltffeN_pGpMgvVCt4DJ-jpIlK7qekR6UcLHY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/drivers/6960fa80f4602a88f46406c5",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"drivers",
+						"6960fa80f4602a88f46406c5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Driver Profile Details (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmE4MGY0NjAyYTg4ZjQ2NDA2YzUiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTYzNTQxLCJleHAiOjE3Njc5NjcxNDF9.wFFb04TltffeN_pGpMgvVCt4DJ-jpIlK7qekR6UcLHY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"armstrong\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/drivers/6960fa80f4602a88f46406c5",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"drivers",
+						"6960fa80f4602a88f46406c5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver Update Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY3NjQ1LCJleHAiOjE3Njc5NzEyNDV9.fGo633Ow1XUEX_zeSo06-fK0x7d1m_DjVLuighcLNSY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"available\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/drivers/6960b6f4e69ba3ee7ff8d220/status",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"drivers",
+						"6960b6f4e69ba3ee7ff8d220",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver View Requested Rides",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY3NjQ1LCJleHAiOjE3Njc5NzEyNDV9.fGo633Ow1XUEX_zeSo06-fK0x7d1m_DjVLuighcLNSY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"available\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides/requested",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"requested"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver Accept a Ride",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmE4MGY0NjAyYTg4ZjQ2NDA2YzUiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTYzNTQxLCJleHAiOjE3Njc5NjcxNDF9.wFFb04TltffeN_pGpMgvVCt4DJ-jpIlK7qekR6UcLHY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides/6960e425b2b53e82b1d473b6/accept",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"6960e425b2b53e82b1d473b6",
+						"accept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver Reject a Ride",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY2MzczLCJleHAiOjE3Njc5Njk5NzN9.QZzaa8kpHn-qWGBRnPLWOaU5iNXkqa3UjDYFL2N5JoU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides/6960e561f4602a88f46406bd/reject",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"6960e561f4602a88f46406bd",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver Start a Ride",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY2MzczLCJleHAiOjE3Njc5Njk5NzN9.QZzaa8kpHn-qWGBRnPLWOaU5iNXkqa3UjDYFL2N5JoU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides/6960e561f4602a88f46406bd/start",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"6960e561f4602a88f46406bd",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver End a Ride (completed)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY3NjQ1LCJleHAiOjE3Njc5NzEyNDV9.fGo633Ow1XUEX_zeSo06-fK0x7d1m_DjVLuighcLNSY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/rides/6960d8a95cf4bca091cc3267/end",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"rides",
+						"6960d8a95cf4bca091cc3267",
+						"end"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver View Ride History",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTY3NjQ1LCJleHAiOjE3Njc5NzEyNDV9.fGo633Ow1XUEX_zeSo06-fK0x7d1m_DjVLuighcLNSY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"available\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/drivers/6960b6f4e69ba3ee7ff8d220/rides",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"drivers",
+						"6960b6f4e69ba3ee7ff8d220",
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Log In",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"admin123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View All Customers (Admin only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/customers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View All Drivers (Admin Only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/drivers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"drivers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Customer (Admin Only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/customers/6960ff3af4602a88f46406c8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"customers",
+						"6960ff3af4602a88f46406c8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Driver (Admin Only)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/drivers/6960ff83f4602a88f46406c9",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"drivers",
+						"6960ff83f4602a88f46406c9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver View Ratings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwYjZmNGU2OWJhM2VlN2ZmOGQyMjAiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzY3OTYzNzIzLCJleHAiOjE3Njc5NjczMjN9.PhKcBf_FEfZhIwMLE89-h2ROE-Wp93PqMSoyAhFi1_s",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/ratings",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Approve the Driver",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/admin/drivers/6960c6b649f53a97d65087b4/approve",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"drivers",
+						"6960c6b649f53a97d65087b4",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin View All Rides",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjgxMzMsImV4cCI6MTc2Nzk3MTczM30.VrreDuzWt_oxwwiDfuRoYRH_JGC8rmMB1e8D_QYnqGk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/rides",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin View Ratings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYwZmNhOWY0NjAyYTg4ZjQ2NDA2YzYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Njc5NjQzOTEsImV4cCI6MTc2Nzk2Nzk5MX0.AXc8-5oetCEVGXRyxDY9I1iBHue76vRz_DMg-bTyUA0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/ratings",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analytics (aggregation)",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/analytics/passengers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"analytics",
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
