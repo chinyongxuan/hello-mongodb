@@ -4,87 +4,512 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyTaxi 2026 App</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { display: none; border: 1px solid #ccc; padding: 20px; margin-top: 20px; border-radius: 8px; }
+        .active { display: block; }
+        button { cursor: pointer; padding: 8px 16px; margin: 5px 0; }
+        input, select { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        .error { color: red; }
+        .success { color: green; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th,td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        nav { margin-bottom: 20px; background: #eee; padding: 10px; display: flex; justify-content: space-between; }
+        h3 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px;}
+    </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <header>
-            <h1>🚖 MyTaxi 2026</h1>
-        </header>
+    <nav id="navBar" style="display:none;">
+        <span id="userWelcome">Welcome</span>
+        <button onclick="logout()">Logout</button>
+    </nav>
 
-        <div id="notification" class="notification hidden"></div>
+    <h1>MyTaxi 2026</h1>
+    <div id="messageBox"></div>
 
-        <section id="login-screen" class="screen">
-            <h2>Welcome Back</h2>
-            <form id="login-form">
-                <input type="email" id="login-email" placeholder="Email Address" required>
-                <input type="password" id="login-password" placeholder="Password" required>
-                <button type="submit" class="btn-primary">Log In</button>
-            </form>
-            <p>New user? <a href="#" id="link-to-register">Create an account</a></p>
-        </section>
+    <div id="authSection" class="section active">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginBx" placeholder="Password">
+        <button onclick="login()">Login</button>
+        
+        <hr>
+        <h3>Register New Account</h3>
+        <select id="regRole">
+            <option value="customer">Customer</option>
+            <option value="driver">Driver</option>
+        </select>
+        <input type="text" id="regName" placeholder="Full Name">
+        <input type="email" id="regEmail" placeholder="Email">
+        <input type="password" id="regPass" placeholder="Password">
+        <input type="text" id="regPhone" placeholder="Phone Number">
+        
+        <div id="driverFields" style="display:none;">
+            <input type="text" id="regPlate" placeholder="Car Plate Number">
+            <input type="text" id="regModel" placeholder="Car Model (e.g. Toyota Camry)">
+            <input type="text" id="regColor" placeholder="Car Color">
+        </div>
 
-        <section id="register-screen" class="screen hidden">
-            <h2>Create Account</h2>
-            <form id="register-form">
-                <input type="text" id="reg-name" placeholder="Full Name" required>
-                <input type="email" id="reg-email" placeholder="Email Address" required>
-                <input type="password" id="reg-password" placeholder="Password" required>
-                <input type="tel" id="reg-phone" placeholder="Phone Number" required>
-                
-                <label>I am a:</label>
-                <select id="reg-role">
-                    <option value="customer">Passenger</option>
-                    <option value="driver">Driver</option>
-                </select>
-
-                <button type="submit" class="btn-primary">Sign Up</button>
-            </form>
-            <p>Already have an account? <a href="#" id="link-to-login">Log In</a></p>
-        </section>
-
-        <section id="dashboard-screen" class="screen hidden">
-            <div class="dashboard-header">
-                <h3>Hello, <span id="user-name-display">User</span>!</h3>
-                <button id="logout-btn" class="btn-danger">Logout</button>
-            </div>
-
-            <div id="customer-panel" class="role-panel hidden">
-                <div class="card">
-                    <h4>📍 Request a Ride</h4>
-                    <form id="ride-request-form">
-                        <input type="text" id="pickup" placeholder="Pickup Location" required>
-                        <input type="text" id="destination" placeholder="Drop-off Destination" required>
-                        <button type="submit" class="btn-action">Find Driver</button>
-                    </form>
-                </div>
-                
-                <div class="card">
-                    <h4>My Ride History</h4>
-                    <ul id="customer-ride-list" class="list-group">
-                        <li>Loading...</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="driver-panel" class="role-panel hidden">
-                <div class="status-bar">
-                    <span>Status: <strong id="driver-status">Available</strong></span>
-                    <button id="toggle-status-btn" class="btn-small">Go Offline</button>
-                </div>
-
-                <div class="card">
-                    <h4>🚖 Available Requests</h4>
-                    <button id="refresh-rides-btn" class="btn-secondary">Refresh List</button>
-                    <ul id="driver-ride-list" class="list-group">
-                        <li>No new requests.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        <button onclick="register()">Register</button>
     </div>
 
-    <script src="client.js"></script>
+    <div id="customerDashboard" class="section">
+        <h2>Customer Dashboard</h2>
+        
+        <div style="background: #f9f9f9; padding: 15px; margin-bottom: 20px;">
+            <h3>Request a Ride</h3>
+            <input type="text" id="pickup" placeholder="Pickup Location">
+            <input type="text" id="destination" placeholder="Destination">
+            <button onclick="requestRide()">Book Ride</button>
+        </div>
+
+        <h3>My Ride History</h3>
+        <button onclick="loadCustomerRides()">Refresh History</button>
+        <div id="customerRideList"></div>
+        
+        <h3>My Submitted Ratings</h3>
+        <button onclick="loadPersonalRatings('customerRatingList')">View My Ratings</button>
+        <div id="customerRatingList"></div>
+    </div>
+
+    <div id="driverDashboard" class="section">
+        <h2>Driver Dashboard</h2>
+        <div id="driverStatusDisplay">Status: Checking...</div>
+        
+        <h3>Update Availability</h3>
+        <button onclick="updateDriverStatus(true)">Go Online</button>
+        <button onclick="updateDriverStatus(false)">Go Offline</button>
+
+        <h3>Available Ride Requests</h3>
+        <button onclick="loadAvailableRides()">Refresh Requests</button>
+        <div id="availableRideList"></div>
+
+        <h3>My Active Jobs / History</h3>
+        <button onclick="loadDriverRides()">Refresh My Jobs</button>
+        <div id="driverRideList"></div>
+
+        <h3>My Ratings (From Customers)</h3>
+        <button onclick="loadPersonalRatings('driverRatingList')">View My Ratings</button>
+        <div id="driverRatingList"></div>
+    </div>
+
+    <div id="adminDashboard" class="section">
+        <h2>Admin Panel</h2>
+        
+        <h3>Pending Drivers</h3>
+        <button onclick="loadAdminDrivers()">Load Drivers</button>
+        <div id="adminDriverList"></div>
+
+        <h3>All Customers</h3>
+        <button onclick="loadAdminCustomers()">Load Customers</button>
+        <div id="adminCustomerList"></div>
+
+        <h3>All Rides</h3>
+        <button onclick="loadAdminRides()">Load All Rides</button>
+        <div id="adminRideList"></div>
+        
+        <h3>All Ratings</h3>
+        <button onclick="loadAdminRatings()">Load All Ratings</button>
+        <div id="adminRatingList"></div>
+    </div>
+
+    <div id="ratingModal" style="display:none; position:fixed; top:20%; left:30%; background:white; padding:20px; border:2px solid black; z-index:1000;">
+        <h3>Rate Driver</h3>
+        <input type="hidden" id="rateRideId">
+        <input type="hidden" id="rateDriverId">
+        <input type="number" id="ratingValue" min="1" max="5" placeholder="Rating (1-5)">
+        <input type="text" id="ratingComment" placeholder="Comment">
+        <button onclick="submitRating()">Submit Rating</button>
+        <button onclick="document.getElementById('ratingModal').style.display='none'">Cancel</button>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080'; 
+        let currentUser = null;
+        let token = localStorage.getItem('token');
+
+        document.getElementById('regRole').addEventListener('change', (e) => {
+            document.getElementById('driverFields').style.display = e.target.value === 'driver' ? 'block' : 'none';
+        });
+
+        // --- AUTH ---
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginBx').value;
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    token = data.token;
+                    localStorage.setItem('token', token);
+                    parseTokenAndRedirect(token);
+                } else { showMessage(data.error || 'Login failed', true); }
+            } catch (err) { showMessage('Server error', true); }
+        }
+
+        async function register() {
+            const role = document.getElementById('regRole').value;
+            const endpoint = role === 'customer' ? '/customers' : '/drivers';
+            const body = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPass').value,
+                phone: document.getElementById('regPhone').value
+            };
+            if (role === 'driver') {
+                body.plateNumber = document.getElementById('regPlate').value;
+                body.model = document.getElementById('regModel').value;
+                body.color = document.getElementById('regColor').value;
+            }
+            try {
+                const res = await fetch(`${API_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) {
+                    showMessage('Registration successful! Please login.');
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPass').value = '';
+                } else {
+                    const d = await res.json();
+                    showMessage(d.error || 'Registration failed', true);
+                }
+            } catch (err) { showMessage('Error connecting to server', true); }
+        }
+
+        async function logout() {
+            // 1. If user is driver, set Offline before destroying token
+            if (currentUser && currentUser.role === 'driver') {
+                try {
+                    await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
+                        method: 'PATCH',
+                        headers: { 
+                            'Authorization': `Bearer ${token}`, 
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify({ available: false })
+                    });
+                } catch (err) { console.log("Error setting offline status:", err); }
+            }
+
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            showSection('authSection');
+            document.getElementById('navBar').style.display = 'none';
+            document.getElementById('driverStatusDisplay').innerText = "Status: Checking...";
+        }
+
+        function parseTokenAndRedirect(jwtToken) {
+            if (!jwtToken) return;
+            
+            const payload = JSON.parse(atob(jwtToken.split('.')[1]));
+            currentUser = payload;
+            
+            document.getElementById('userWelcome').innerText = `Hello, ${payload.role}`;
+            document.getElementById('navBar').style.display = 'flex';
+
+            if (payload.role === 'customer') {
+                showSection('customerDashboard');
+                loadCustomerRides();
+            } else if (payload.role === 'driver') {
+                showSection('driverDashboard');
+                loadDriverRides(); 
+                loadAvailableRides();
+                checkDriverStatus(); 
+            } else if (payload.role === 'admin') {
+                showSection('adminDashboard');
+            }
+        }
+
+        // --- CUSTOMER ---
+        async function requestRide() {
+            const pickup = document.getElementById('pickup').value;
+            const destination = document.getElementById('destination').value;
+            const res = await fetch(`${API_URL}/rides`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pickupLocation: pickup, destination: destination, fare: 20 })
+            });
+            if (res.ok) {
+                showMessage('Ride requested successfully!');
+                loadCustomerRides();
+            }
+        }
+
+        async function loadCustomerRides() {
+            if(!currentUser) return;
+            const res = await fetch(`${API_URL}/customers/${currentUser.userId}/rides`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const rides = await res.json();
+            const list = document.getElementById('customerRideList');
+            list.innerHTML = rides.length ? buildRideTable(rides, 'customer') : '<p>No rides found.</p>';
+        }
+
+        // --- DRIVER ---
+        async function loadAvailableRides() {
+            const res = await fetch(`${API_URL}/rides/requested`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const rides = await res.json();
+            const list = document.getElementById('availableRideList');
+            list.innerHTML = rides.length ? buildRideTable(rides, 'driver-available') : '<p>No new requests available.</p>';
+        }
+
+        async function loadDriverRides() {
+            if(!currentUser) return;
+            const res = await fetch(`${API_URL}/drivers/${currentUser.userId}/rides`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const rides = await res.json();
+            const list = document.getElementById('driverRideList');
+            list.innerHTML = rides.length ? buildRideTable(rides, 'driver-history') : '<p>No jobs history.</p>';
+        }
+
+        async function checkDriverStatus() {
+            if(!currentUser) return;
+            try {
+                const res = await fetch(`${API_URL}/drivers/${currentUser.userId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const driver = await res.json();
+                const isOnline = driver.available === true;
+                document.getElementById('driverStatusDisplay').innerText = `Status: ${isOnline ? 'Online' : 'Offline'}`;
+            } catch (err) { console.error("Failed to sync status"); }
+        }
+
+        async function updateDriverStatus(isAvailable) {
+            if(!currentUser) return;
+            await fetch(`${API_URL}/drivers/${currentUser.userId}/status`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ available: isAvailable })
+            });
+            document.getElementById('driverStatusDisplay').innerText = `Status: ${isAvailable ? 'Online' : 'Offline'}`;
+        }
+
+        async function updateRideStatus(rideId, status) {
+            let action = '';
+            if (status === 'accepted') action = 'accept';
+            if (status === 'rejected') action = 'reject';
+            if (status === 'ongoing') action = 'start';
+            if (status === 'completed') action = 'end';
+
+            const res = await fetch(`${API_URL}/rides/${rideId}/${action}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if(res.ok) {
+                showMessage(`Ride ${status}`);
+                loadAvailableRides();
+                loadDriverRides();
+            } else {
+                const d = await res.json();
+                showMessage(d.error || 'Action failed', true);
+            }
+        }
+
+        // --- RATING SYSTEM ---
+        function openRatingModal(rideId, driverId) {
+            document.getElementById('rateRideId').value = rideId;
+            document.getElementById('rateDriverId').value = driverId;
+            document.getElementById('ratingModal').style.display = 'block';
+        }
+
+        async function submitRating() {
+            const rideId = document.getElementById('rateRideId').value;
+            const driverId = document.getElementById('rateDriverId').value;
+            const rating = document.getElementById('ratingValue').value;
+            const comment = document.getElementById('ratingComment').value;
+
+            const res = await fetch(`${API_URL}/ratings`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rideId, driverId, rating, comment })
+            });
+
+            if(res.ok) {
+                showMessage('Rating submitted!');
+                document.getElementById('ratingModal').style.display = 'none';
+            } else {
+                showMessage('Failed to submit rating', true);
+            }
+        }
+
+        // Generic loader for Driver/Customer personal ratings
+        async function loadPersonalRatings(elementId) {
+             const res = await fetch(`${API_URL}/ratings`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const ratings = await res.json();
+
+            // Determine column header based on role
+            let nameHeader = '';
+            if (currentUser.role === 'customer') {
+                nameHeader = '<th>Rated Driver</th>';
+            } else {
+                nameHeader = '<th>From Customer</th>';
+            }
+
+            let html = `<table><tr>${nameHeader}<th>Rating</th><th>Comment</th></tr>`;
+            
+            ratings.forEach(r => {
+                let displayDate = 'N/A';
+                
+                // Determine which name to show
+                let displayName = '';
+                if (currentUser.role === 'customer') {
+                    displayName = r.driverName || 'Unknown Driver';
+                } else {
+                    displayName = r.customerName || 'Unknown Customer';
+                }
+
+                html += `<tr>
+                    <td>${displayName}</td>
+                    <td>${r.rating} / 5</td>
+                    <td>${r.comment || '-'}</td>
+                </tr>`;
+            });
+            html += '</table>';
+            
+            document.getElementById(elementId).innerHTML = ratings.length ? html : '<p>No ratings yet.</p>';
+        }
+
+        // --- ADMIN ---
+        async function loadAdminDrivers() {
+            const res = await fetch(`${API_URL}/admin/drivers`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const drivers = await res.json();
+            let html = '<table><tr><th>Name</th><th>Email</th><th>Approved</th><th>Action</th></tr>';
+            drivers.forEach(d => {
+                html += `<tr><td>${d.name}</td><td>${d.email}</td><td>${d.approved ? 'Yes' : 'No'}</td>
+                    <td>${!d.approved ? `<button onclick="approveDriver('${d._id}')">Approve</button>` : ''} <button onclick="deleteUser('drivers', '${d._id}')">Delete</button></td></tr>`;
+            });
+            html += '</table>';
+            document.getElementById('adminDriverList').innerHTML = html;
+        }
+
+        async function loadAdminCustomers() {
+            const res = await fetch(`${API_URL}/admin/customers`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const customers = await res.json();
+            let html = '<table><tr><th>Name</th><th>Email</th><th>Action</th></tr>';
+            customers.forEach(c => {
+                html += `<tr><td>${c.name}</td><td>${c.email}</td><td><button onclick="deleteUser('customers', '${c._id}')">Delete</button></td></tr>`;
+            });
+            html += '</table>';
+            document.getElementById('adminCustomerList').innerHTML = html;
+        }
+        
+        async function loadAdminRides() {
+            const res = await fetch(`${API_URL}/admin/rides`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const rides = await res.json();
+            document.getElementById('adminRideList').innerHTML = rides.length ? buildRideTable(rides, 'admin') : '<p>No rides found.</p>';
+        }
+
+        // SPECIAL ADMIN FUNCTION TO SHOW NAMES (Uses aggregation endpoint)
+        async function loadAdminRatings() {
+            const res = await fetch(`${API_URL}/admin/ratings`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const ratings = await res.json();
+            
+            if (!ratings || ratings.length === 0) {
+                document.getElementById('adminRatingList').innerHTML = '<p>No ratings found.</p>';
+                return;
+            }
+
+            let html = '<table><tr><th>Customer</th><th>Driver</th><th>Rating</th><th>Comment</th></tr>';
+            ratings.forEach(r => {
+                const cName = r.customerName || 'Unknown Customer';
+                const dName = r.driverName || 'Unknown Driver';
+                
+                html += `<tr>
+                    <td>${cName}</td>
+                    <td>${dName}</td>
+                    <td>${r.rating} / 5</td>
+                    <td>${r.comment || '-'}</td>
+                </tr>`;
+            });
+            html += '</table>';
+            document.getElementById('adminRatingList').innerHTML = html;
+        }
+
+        async function approveDriver(id) {
+            await fetch(`${API_URL}/admin/drivers/${id}/approve`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+            loadAdminDrivers();
+        }
+        
+        async function deleteUser(collection, id) {
+            if(!confirm('Are you sure?')) return;
+            await fetch(`${API_URL}/admin/${collection}/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+            if(collection === 'drivers') loadAdminDrivers();
+            else loadAdminCustomers();
+        }
+
+        function showSection(id) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
+            // Show the specific section requested
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.add('active');
+            } else {
+                console.error("Section not found:", id);
+            }
+        }
+
+        // --- UTILS ---
+        function buildRideTable(rides, viewType) {
+            let html = '<table><tr><th>From</th><th>To</th><th>Status</th><th>Action</th></tr>';
+            rides.forEach(r => {
+                let actionBtns = '';
+
+                if(viewType === 'driver-available' && r.status === 'requested') {
+                    actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept Job</button>`;
+                }
+                
+                if(viewType === 'driver-history') {
+                    if (r.status === 'accepted') {
+                        actionBtns = `<button onclick="updateRideStatus('${r._id}', 'ongoing')">Start Ride</button>`;
+                    } else if (r.status === 'ongoing') {
+                        actionBtns = `<button onclick="updateRideStatus('${r._id}', 'completed')">End Ride</button>`;
+                    }
+                }
+                
+                if(viewType === 'customer' && r.status === 'completed') {
+                    if(r.driverId) {
+                         actionBtns = `<button onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate Driver</button>`;
+                    }
+                }
+
+                html += `<tr>
+                    <td>${r.pickupLocation || 'N/A'}</td>
+                    <td>${r.destination || 'N/A'}</td>
+                    <td>${r.status}</td>
+                    <td>${actionBtns}</td>
+                </tr>`;
+            });
+            html += '</table>';
+            return html;
+        }
+        
+        
+        function showMessage(msg, isError = false) {
+            const el = document.getElementById('messageBox');
+            el.innerText = msg;
+            el.className = isError ? 'error' : 'success';
+            setTimeout(() => el.innerText = '', 3000);
+        }
+
+        if (token) parseTokenAndRedirect(token);
+    </script>
 </body>
 </html>

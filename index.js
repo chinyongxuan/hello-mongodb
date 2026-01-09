@@ -1,4 +1,12 @@
 require('dotenv').config();
+
+console.log("--------------------------------");
+console.log("Testing Environment Variables:");
+console.log("PORT:", process.env.PORT); 
+console.log("JWT_SECRET:", process.env.JWT_SECRET ? "Loaded (Hidden)" : "MISSING!");
+console.log("MONGO_URI matches?", process.env.MONGODB_URI === "mongodb+srv://chin:LoO1qDHMJ32STi6Q@benr2423.mdp6zxo.mongodb.net/?appName=benr2423");
+console.log("--------------------------------");
+
 const path = require('path');
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
@@ -6,7 +14,6 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// defined in Lab Part 1
 const saltRounds = 10; 
 
 const port = process.env.PORT || 3000;
@@ -18,6 +25,8 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 let db;
 
@@ -111,30 +120,58 @@ app.listen(port, () => {
 
 // AUTHENTICATION ROUTES
 
-// POST /auth/login - Unified Login
+// POST /auth/login - DEBUG VERSION
 app.post('/auth/login', async (req, res) => {
+    console.log("---------------- LOGIN ATTEMPT ----------------");
     try {
         const { email, password } = req.body;
+        console.log("1. Email received:", email);
+
+        // Check if Secret is loaded
+        console.log("2. Checking JWT_SECRET:", process.env.JWT_SECRET ? "LOADED OK" : "MISSING/KX");
+        if (!process.env.JWT_SECRET) {
+            throw new Error("JWT_SECRET is missing from .env file");
+        }
         
+        // Find User
         let user = await db.collection('customers').findOne({ email });
-        if (!user) user = await db.collection('drivers').findOne({ email });
+        let role = 'customer';
         
-        if (!user) return res.status(401).json({ error: "User not found" });
+        if (!user) {
+            console.log("   - Not found in Customers...");
+            user = await db.collection('drivers').findOne({ email });
+            role = 'driver';
+        }
 
+        if (!user) {
+            console.log("3. RESULT: User not found in any collection.");
+            return res.status(401).json({ error: "User not found" });
+        }
+        console.log(`3. User found in '${role}' collection.`);
+
+        // Check Password
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+        console.log("4. Password match result:", isMatch);
+        
+        if (!isMatch) {
+            return res.status(401).json({ error: "Invalid credentials (wrong password)" });
+        }
 
+        // Sign Token
         const token = jwt.sign(
-            { userId: user._id, role: user.role },
+            { userId: user._id, role: user.role || role },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
         );
+        console.log("5. Token generated successfully.");
 
         res.json({ token });
     } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    res.status(500).json({ error: "Login failed", details: err.message });
-  }
+        console.error("!!! CRITICAL LOGIN ERROR !!!");
+        console.error(err);
+        res.status(500).json({ error: "Login failed", details: err.message });
+    }
+    console.log("-----------------------------------------------");
 });
 
 
@@ -265,20 +302,46 @@ app.post('/ratings', authenticate, async (req, res) => {
 // GET /ratings
 app.get('/ratings', authenticate, async (req, res) => {
     try {
-        let query = {};
-        
-        if (req.user.role === 'admin') {
-        } 
-        else if (req.user.role === 'driver') {
-            query.driverId = new ObjectId(req.user.userId);
-        } 
-        else {
-            query.customerId = new ObjectId(req.user.userId);
+        let matchStage = {};
+        if (req.user.role === 'driver') {
+            matchStage.driverId = new ObjectId(req.user.userId);
+        } else if (req.user.role === 'customer') {
+            matchStage.customerId = new ObjectId(req.user.userId);
         }
-        
-        const ratings = await db.collection('ratings').find(query).toArray();
+
+        const pipeline = [
+            { $match: matchStage },
+            {
+                $lookup: {
+                    from: 'customers',
+                    localField: 'customerId',
+                    foreignField: '_id',
+                    as: 'customerDetails'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'drivers',
+                    localField: 'driverId',
+                    foreignField: '_id',
+                    as: 'driverDetails'
+                }
+            },
+            {
+                $project: {
+                    rating: 1,
+                    comment: 1,
+                    createdAt: 1,
+                    customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
+                    driverName: { $arrayElemAt: ["$driverDetails.name", 0] }
+                }
+            }
+        ];
+
+        const ratings = await db.collection('ratings').aggregate(pipeline).toArray();
         res.status(200).json(ratings);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Failed to fetch ratings" });
     }
 });
@@ -387,6 +450,15 @@ app.patch('/rides/:id/accept', authenticate, authorize(['driver']), async (req, 
         return res.status(403).json({ error: "You are not approved to accept rides yet." });
     }
 
+    if (driver.available !== true) {
+        return res.status(400).json({ error: "You are currently OFFLINE. Go Online to accept jobs." });
+    }
+
+    const ride = await db.collection('rides').findOne({ _id: new ObjectId(req.params.id) });
+    if (!ride || ride.status !== 'requested') {
+        return res.status(400).json({ error: "Ride is no longer available." });
+    }
+
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
       { 
@@ -416,7 +488,7 @@ app.patch('/rides/:id/reject', authenticate, authorize(['driver']), async (req, 
 });
 
 // PATCH /rides/:id/start
-app.patch('/rides/:id/start', async (req, res) => {
+app.patch('/rides/:id/start', authenticate, async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
@@ -429,12 +501,12 @@ app.patch('/rides/:id/start', async (req, res) => {
     );
     res.status(200).json({ updated: result.modifiedCount });
   } catch (err) {
-    res.status(400).json({ error: "Invalid ride ID" });
+    console.log(err);
+    res.status(400).json({ error: "Invalid ride ID or User" });
   }
 });
-
 // PATCH /rides/:id/end
-app.patch('/rides/:id/end', async (req, res) => {
+app.patch('/rides/:id/end', authenticate, async (req, res) => {
   try {
     const result = await db.collection('rides').updateOne(
       { _id: new ObjectId(req.params.id) },
@@ -464,6 +536,16 @@ app.get('/drivers/:id/rides', authenticate, async (req, res) => {
   }
 });
 
+
+// GET /rides/requested (Show available rides to drivers)
+app.get('/rides/requested', authenticate, authorize(['driver']), async (req, res) => {
+  try {
+    const rides = await db.collection('rides').find({ status: 'requested' }).toArray();
+    res.status(200).json(rides);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch available rides" });
+  }
+});
 
 
 // ADMIN ENDPOINTS (Protected)
@@ -521,7 +603,7 @@ app.patch('/admin/drivers/:id/approve', authenticate, authorize(['admin']), asyn
 });
 
 // GET /admin/rides
-app.get('/admin/rides', async (req, res) => {
+app.get('/admin/rides', authenticate, authorize(['admin']), async (req, res) => {
   try {
    const rides = await db.collection('rides').find().toArray();
     res.status(200).json(rides);
@@ -533,9 +615,38 @@ app.get('/admin/rides', async (req, res) => {
 // GET /admin/ratings
 app.get('/admin/ratings', async (req, res) => {
    try {
-    const ratings = await db.collection('ratings').find().toArray();
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'customers',       
+          localField: 'customerId',
+          foreignField: '_id',     
+          as: 'customerDetails'    
+        }
+      },
+      {
+        $lookup: {
+          from: 'drivers',
+          localField: 'driverId',
+          foreignField: '_id',
+          as: 'driverDetails'
+        }
+      },
+      {
+        $project: {
+          rating: 1,
+          comment: 1,
+          createdAt: 1,
+          customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
+          driverName: { $arrayElemAt: ["$driverDetails.name", 0] }
+        }
+      }
+    ];
+
+    const ratings = await db.collection('ratings').aggregate(pipeline).toArray();
     res.status(200).json(ratings);
    } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to fetch ratings" });
    }
 });
