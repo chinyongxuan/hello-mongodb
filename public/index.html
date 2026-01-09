@@ -448,26 +448,28 @@
         }
 
         async function addPayment() {
-            const num = document.getElementById('cardNum').value;
-            const exp = document.getElementById('cardExp').value;
-            
-            if (!num || !exp) return showMessage('Enter card details', true);
+        const num = document.getElementById('cardNum').value;
+        const exp = document.getElementById('cardExp').value;
+        const cvv = document.getElementById('cardCvv').value; // Get CVV
+        
+        if (!num || !exp || !cvv) return showMessage('Enter all card details', true);
 
-            const res = await fetch(`${API_URL}/payments`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cardNumber: num, expiry: exp, cvv: '123' })
-            });
+        const res = await fetch(`${API_URL}/payments`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cardNumber: num, expiry: exp, cvv: cvv }) // Send CVV
+        });
 
-            if (res.ok) {
-                showMessage('Card added!');
-                document.getElementById('cardNum').value = '';
-                document.getElementById('cardExp').value = '';
-                loadPayments();
-            } else {
-                showMessage('Failed to add card', true);
-            }
+        if (res.ok) {
+            showMessage('Card added!');
+            document.getElementById('cardNum').value = '';
+            document.getElementById('cardExp').value = '';
+            document.getElementById('cardCvv').value = '';
+            loadPayments();
+        } else {
+            showMessage('Failed to add card', true);
         }
+    }
 
         async function deletePayment(id) {
             if(!confirm("Remove this card?")) return;
@@ -619,17 +621,28 @@
             } else { showMessage('Failed to submit rating', true); }
         }
         async function loadPersonalRatings(elementId) {
-             const res = await fetch(`${API_URL}/ratings`, { headers: { 'Authorization': `Bearer ${token}` } });
-            const ratings = await res.json();
-            let nameHeader = currentUser.role === 'customer' ? '<th>Rated Driver</th>' : '<th>From Customer</th>';
-            let html = `<table><tr>${nameHeader}<th>Rating</th><th>Comment</th></tr>`;
-            ratings.forEach(r => {
-                let displayName = currentUser.role === 'customer' ? (r.driverName || 'Unknown') : (r.customerName || 'Unknown');
-                html += `<tr><td>${displayName}</td><td><span style="color:#f1c40f;">★</span> ${r.rating} / 5</td><td>${r.comment || '-'}</td></tr>`;
-            });
-            html += '</table>';
-            document.getElementById(elementId).innerHTML = ratings.length ? html : '<p style="text-align:center; color:#999;">No ratings yet.</p>';
-        }
+        const res = await fetch(`${API_URL}/ratings`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const ratings = await res.json();
+        
+        let nameHeader = currentUser.role === 'customer' ? '<th>Rated Driver</th>' : '<th>From Customer</th>';
+        
+        // Added "Ride" column
+        let html = `<table><tr>${nameHeader}<th>Ride</th><th>Rating</th><th>Comment</th></tr>`;
+        
+        ratings.forEach(r => {
+            let displayName = currentUser.role === 'customer' ? (r.driverName || 'Unknown') : (r.customerName || 'Unknown');
+            let rideInfo = r.rideTo ? `${r.rideFrom} ➝ ${r.rideTo}` : '<i>Deleted Ride</i>';
+
+            html += `<tr>
+                <td>${displayName}</td>
+                <td><small>${rideInfo}</small></td>
+                <td><span style="color:#f1c40f;">★</span> ${r.rating} / 5</td>
+                <td>${r.comment || '-'}</td>
+            </tr>`;
+        });
+        html += '</table>';
+        document.getElementById(elementId).innerHTML = ratings.length ? html : '<p style="text-align:center; color:#999;">No ratings yet.</p>';
+    }
 
         // --- ADMIN ---
         async function loadAdminDrivers() {
@@ -687,35 +700,52 @@
 
         // --- UTILS ---
         function buildRideTable(rides, viewType) {
-            let html = '<table><tr><th>Route</th><th>Status</th><th>Action</th></tr>';
-            rides.forEach(r => {
-                let actionBtns = '';
-                if(viewType === 'driver-available' && r.status === 'requested') actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept</button>`;
-                if(viewType === 'driver-history') {
-                    if (r.status === 'accepted') actionBtns = `<button style="background:#f39c12" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>`;
-                    else if (r.status === 'ongoing') actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
-                    else if (r.status === 'completed') actionBtns = `<span style="color:green">Done</span>`;
+        // Dynamic Header based on who is viewing
+        let partnerHeader = viewType === 'customer' ? 'Driver' : 'Customer';
+        if(viewType === 'admin') partnerHeader = 'User Info';
+
+        let html = `<table><tr><th>Route</th><th>${partnerHeader}</th><th>Status</th><th>Action</th></tr>`;
+        
+        rides.forEach(r => {
+            let actionBtns = '';
+            
+            // Logic to determine Partner Name display
+            let partnerDisplay = '-';
+            if (viewType === 'customer') {
+                // If I am customer, show Driver Name + Car
+                partnerDisplay = r.driverName ? `<b>${r.driverName}</b><br><small>${r.carModel || ''}</small>` : '<i>Finding...</i>';
+            } else if (viewType === 'driver-history' || viewType === 'driver-available') {
+                // If I am driver, show Customer Name
+                partnerDisplay = r.customerName || '<i>Unknown</i>';
+            }
+
+            // ... (Existing button logic for Accept/Start/Cancel remains here) ...
+            if(viewType === 'driver-available' && r.status === 'requested') actionBtns = `<button onclick="updateRideStatus('${r._id}', 'accepted')">Accept</button>`;
+            if(viewType === 'driver-history') {
+                if (r.status === 'accepted') actionBtns = `<button style="background:#f39c12" onclick="updateRideStatus('${r._id}', 'ongoing')">Start</button>`;
+                else if (r.status === 'ongoing') actionBtns = `<button style="background:#2ecc71" onclick="updateRideStatus('${r._id}', 'completed')">Complete</button>`;
+                else if (r.status === 'completed') actionBtns = `<span style="color:green">Done</span>`;
+            }
+            if(viewType === 'customer') {
+                if(r.status === 'requested' || r.status === 'accepted') {
+                    actionBtns = `<button class="btn-danger" onclick="cancelRide('${r._id}')">Cancel</button>`;
                 }
-                
-                // --- CUSTOMER LOGIC ---
-                if(viewType === 'customer') {
-                    if(r.status === 'requested' || r.status === 'accepted') {
-                        actionBtns = `<button class="btn-danger" onclick="cancelRide('${r._id}')">Cancel</button>`;
-                    }
-                    else if (r.status === 'completed' && r.driverId) {
-                         actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
-                    }
+                else if (r.status === 'completed' && r.driverId) {
+                        actionBtns = `<button class="btn-secondary" onclick="openRatingModal('${r._id}', '${r.driverId}')">Rate</button>`;
                 }
-                
-                html += `<tr>
-                    <td><b>From:</b> ${r.pickupLocation || '?'}<br><b>To:</b> ${r.destination || '?'}</td>
-                    <td><span style="padding:4px 8px; border-radius:4px; font-size:0.8em; background:${r.status==='completed'?'#d4edda':'#fff3cd'}">${r.status.toUpperCase()}</span></td>
-                    <td>${actionBtns}</td>
-                </tr>`;
-            });
-            html += '</table>';
-            return html;
-        }
+            }
+
+            html += `<tr>
+                <td><b>From:</b> ${r.pickupLocation || '?'}<br><b>To:</b> ${r.destination || '?'}</td>
+                <td>${partnerDisplay}</td>
+                <td><span style="padding:4px 8px; border-radius:4px; font-size:0.8em; background:${r.status==='completed'?'#d4edda':'#fff3cd'}">${r.status.toUpperCase()}</span></td>
+                <td>${actionBtns}</td>
+            </tr>`;
+        });
+        html += '</table>';
+        return html;
+    }
+
         function showSection(id) {
             document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
             document.getElementById(id).classList.add('active');

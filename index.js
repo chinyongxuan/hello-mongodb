@@ -271,16 +271,37 @@ app.delete('/rides/:id', authenticate, async (req, res) => {
 // GET /customers/:id/rides
 app.get('/customers/:id/rides', authenticate, async (req, res) => {
   try {
-    const rides = await db.collection('rides').find({ 
-        customerId: new ObjectId(req.params.id) 
-    }).toArray();
+    const rides = await db.collection('rides').aggregate([
+        { $match: { customerId: new ObjectId(req.params.id) } },
+        {
+            $lookup: {
+                from: 'drivers',
+                localField: 'driverId',
+                foreignField: '_id',
+                as: 'driverDetails'
+            }
+        },
+        {
+            $project: {
+                pickupLocation: 1,
+                destination: 1,
+                fare: 1,
+                status: 1,
+                driverId: 1,
+                driverName: { $arrayElemAt: ["$driverDetails.name", 0] },
+                carModel: { $arrayElemAt: ["$driverDetails.model", 0] }, 
+                createdAt: 1
+            }
+        },
+        { $sort: { createdAt: -1 } } // Newest first
+    ]).toArray();
     
     res.status(200).json(rides);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to fetch ride history" });
   }
 });
-
 // POST /ratings (Add Rating)
 app.post('/ratings', authenticate, async (req, res) => {
   try {
@@ -311,20 +332,13 @@ app.get('/ratings', authenticate, async (req, res) => {
         const pipeline = [
             { $match: matchStage },
             {
-                $lookup: {
-                    from: 'customers',
-                    localField: 'customerId',
-                    foreignField: '_id',
-                    as: 'customerDetails'
-                }
+                $lookup: { from: 'customers', localField: 'customerId', foreignField: '_id', as: 'customerDetails' }
             },
             {
-                $lookup: {
-                    from: 'drivers',
-                    localField: 'driverId',
-                    foreignField: '_id',
-                    as: 'driverDetails'
-                }
+                $lookup: { from: 'drivers', localField: 'driverId', foreignField: '_id', as: 'driverDetails' }
+            },
+            {
+                $lookup: { from: 'rides', localField: 'rideId', foreignField: '_id', as: 'rideDetails' }
             },
             {
                 $project: {
@@ -332,7 +346,9 @@ app.get('/ratings', authenticate, async (req, res) => {
                     comment: 1,
                     createdAt: 1,
                     customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
-                    driverName: { $arrayElemAt: ["$driverDetails.name", 0] }
+                    driverName: { $arrayElemAt: ["$driverDetails.name", 0] },
+                    rideFrom: { $arrayElemAt: ["$rideDetails.pickupLocation", 0] },
+                    rideTo: { $arrayElemAt: ["$rideDetails.destination", 0] }
                 }
             }
         ];
@@ -556,16 +572,33 @@ app.patch('/rides/:id/end', authenticate, async (req, res) => {
 // GET /drivers/:id/rides
 app.get('/drivers/:id/rides', authenticate, async (req, res) => {
   try {
-        const rides = await db.collection('rides').find({ 
-        driverId: new ObjectId(req.params.id) 
-    }).toArray();
+    const rides = await db.collection('rides').aggregate([
+        { $match: { driverId: new ObjectId(req.params.id) } },
+        {
+            $lookup: {
+                from: 'customers',
+                localField: 'customerId',
+                foreignField: '_id',
+                as: 'customerDetails'
+            }
+        },
+        {
+            $project: {
+                pickupLocation: 1,
+                destination: 1,
+                status: 1,
+                customerName: { $arrayElemAt: ["$customerDetails.name", 0] },
+                createdAt: 1
+            }
+        },
+        { $sort: { createdAt: -1 } }
+    ]).toArray();
     
     res.status(200).json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch ride history" });
   }
 });
-
 
 // GET /rides/requested (Show available rides to approved drivers)
 app.get('/rides/requested', authenticate, authorize(['driver']), async (req, res) => {
