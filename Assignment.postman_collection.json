@@ -21,9 +21,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/customers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers"
@@ -50,9 +50,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/drivers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers"
@@ -79,9 +79,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides"
@@ -105,9 +105,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/customers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers"
@@ -131,9 +131,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/auth/login",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//auth/login",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"auth",
@@ -159,9 +159,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers/6960d7195cf4bca091cc3266",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers",
@@ -196,9 +196,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers/6960d7195cf4bca091cc3266",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers",
@@ -233,9 +233,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/payments",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//payments",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"payments"
@@ -250,9 +250,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266/payments",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers/6960d7195cf4bca091cc3266/payments",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers",
@@ -288,9 +288,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/payments/6960f7cdf4602a88f46406be",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//payments/6960f7cdf4602a88f46406be",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"payments",
@@ -325,9 +325,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides"
@@ -352,9 +352,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/rides/6960f875f4602a88f46406c0",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/6960f875f4602a88f46406c0",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -389,9 +389,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/ratings",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//ratings",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"ratings"
@@ -416,9 +416,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/ratings",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//ratings",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"ratings"
@@ -443,9 +443,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/customers/6960d7195cf4bca091cc3266/rides",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers/6960d7195cf4bca091cc3266/rides",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers",
@@ -474,9 +474,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/drivers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers"
@@ -500,9 +500,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/auth/login",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//auth/login",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"auth",
@@ -530,9 +530,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/customers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//customers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"customers"
@@ -557,9 +557,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/drivers/6960fa80f4602a88f46406c5",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers/6960fa80f4602a88f46406c5",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers",
@@ -594,9 +594,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/drivers/6960fa80f4602a88f46406c5",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers/6960fa80f4602a88f46406c5",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers",
@@ -631,9 +631,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/drivers/6960b6f4e69ba3ee7ff8d220/status",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers/6960b6f4e69ba3ee7ff8d220/status",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers",
@@ -672,9 +672,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides/requested",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/requested",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -709,9 +709,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides/6960e425b2b53e82b1d473b6/accept",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/6960e425b2b53e82b1d473b6/accept",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -747,9 +747,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides/6960e561f4602a88f46406bd/reject",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/6960e561f4602a88f46406bd/reject",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -785,9 +785,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides/6960e561f4602a88f46406bd/start",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/6960e561f4602a88f46406bd/start",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -823,9 +823,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/rides/6960d8a95cf4bca091cc3267/end",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//rides/6960d8a95cf4bca091cc3267/end",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"rides",
@@ -864,9 +864,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/drivers/6960b6f4e69ba3ee7ff8d220/rides",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//drivers/6960b6f4e69ba3ee7ff8d220/rides",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"drivers",
@@ -895,9 +895,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/auth/login",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//auth/login",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"auth",
@@ -923,9 +923,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/admin/customers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/customers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -951,9 +951,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/admin/drivers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/drivers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -979,9 +979,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/admin/customers/6960ff3af4602a88f46406c8",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/customers/6960ff3af4602a88f46406c8",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -1008,9 +1008,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/admin/drivers/6960ff83f4602a88f46406c9",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/drivers/6960ff83f4602a88f46406c9",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -1037,9 +1037,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/ratings",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//ratings",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"ratings"
@@ -1073,9 +1073,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/admin/drivers/6960c6b649f53a97d65087b4/approve",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/drivers/6960c6b649f53a97d65087b4/approve",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -1103,9 +1103,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/admin/rides",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//admin/rides",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"admin",
@@ -1131,9 +1131,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/ratings",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//ratings",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"ratings"
@@ -1151,9 +1151,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/analytics/passengers",
+					"raw": "https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net//analytics/passengers",
 					"host": [
-						"{{url}}"
+						"https://mytaxi2026-gvdrd2aadaa8chc8.malaysiawest-01.azurewebsites.net/"
 					],
 					"path": [
 						"analytics",
